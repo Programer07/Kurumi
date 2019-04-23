@@ -1,0 +1,19 @@
+{
+    "Environment": "Development",
+    "BotToken": "",
+  	"IbSearchKey": "",
+  	"YoutubeKey": "",
+  	"BotlistKey": "",
+  	"OsuKey": "",
+	  "SentryKey": "",
+	  "RandomOrgKey": "",
+	  "AniListClientId": "",
+	  "AniListSecret": "",
+	  "EmbedColor": 0xFF6249,
+	  "DefaultLanguage": "en",
+	  "YoutubeCacheSizeGB": 1,
+	  "BackupDB": false,
+	  "LoggerMode": 0,
+	  "ShardCount": 1,
+	  "Administrators": [ ]
+}
