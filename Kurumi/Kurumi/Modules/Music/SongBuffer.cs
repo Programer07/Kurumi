@@ -30,18 +30,18 @@ namespace Kurumi.Modules.Music
 
                 if (Provider != MusicProvider.ListenMoe)
                 {
-                    Location = Directory.GetFiles(KurumiPathConfig.MusicTemp).Where(x => x.Contains(guild.Id.ToString())).FirstOrDefault();
-                    if (Location != null)
-                        File.Delete(Location);
-                    else
-                        Location = $"{KurumiPathConfig.MusicTemp}{guild.Id}";
+                    string[] Files = Directory.GetFiles(KurumiPathConfig.MusicTemp);
+                    for (int i = 0; i < Files.Length; i++)
+                        if (Files[i].Contains(guild.Id.ToString()))
+                            File.Delete(Files[i]);
 
+                    Location = $"{KurumiPathConfig.MusicTemp}{guild.Id}";
                     string Id = YoutubeService.VideoId(song.StreamUrl);
                     if (!YoutubeCacheManager.TryGetCache(Id, guild.Id))
                     { //Song is not cached
                         DownloadProcess = DownloadSong();
                         while (!DownloadProcess.HasExited)
-                            Thread.Sleep(10);
+                            Thread.Sleep(50);
 
                         YoutubeCacheManager.Cache(Location, Id); //Cache the file
                     }
@@ -93,7 +93,7 @@ namespace Kurumi.Modules.Music
                 catch { }
                 try
                 {
-                    Thread.Sleep(50); //Fails to delete it immediately
+                    Thread.Sleep(100); //Fails to delete it immediately
                     if (File.Exists(Location))
                         File.Delete(Location);
                 }
