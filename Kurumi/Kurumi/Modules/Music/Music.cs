@@ -34,7 +34,10 @@ namespace Kurumi.Modules.Music
                     await Context.Channel.SendEmbedAsync(lang["music_url_null"]);
                     return;
                 }
-                await Context.Message.DeleteAsync();
+                try
+                {
+                    await Context.Message.DeleteAsync();
+                } catch (Exception) { }
                 //Get what type the input is. YT, Coundcloud, keyword
                 var inputType = GetInputType(Input);
                 ISongInfo Song = null;

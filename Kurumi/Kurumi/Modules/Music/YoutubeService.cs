@@ -132,9 +132,14 @@ namespace Kurumi.Modules.Music
         }
         public static bool ValidVideo(string Url)
         {
-            string ReqUrl = $"https://www.youtube.com/oembed?format=json&url={Url}"; //Returns 404 when not found
-            HttpWebRequest Request = (HttpWebRequest)WebRequest.Create(ReqUrl);
-            return ((HttpWebResponse)Request.GetResponse()).StatusCode != HttpStatusCode.NotFound;
+            try
+            {
+                string ReqUrl = $"https://www.youtube.com/oembed?format=json&url={Url}"; //Returns 404 when not found
+                HttpWebRequest Request = (HttpWebRequest)WebRequest.Create(ReqUrl);
+                return ((HttpWebResponse)Request.GetResponse()).StatusCode != HttpStatusCode.NotFound;
+            }
+            catch (Exception) { }
+            return false;
         }
     }
 }
