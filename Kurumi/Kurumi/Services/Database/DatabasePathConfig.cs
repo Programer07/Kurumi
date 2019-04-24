@@ -78,7 +78,6 @@ namespace Kurumi.Services.Database
                     Directory.CreateDirectory(Graphics);
                     Directory.CreateDirectory(Temp);
                     Directory.CreateDirectory(YoutubeCache);
-                    Directory.CreateDirectory(Settings + "lang");
                 }
                 ex = null;
                 return true;
