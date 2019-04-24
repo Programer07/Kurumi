@@ -41,8 +41,6 @@ namespace Kurumi.Services.Permission
 
                     foreach (var Role in Roles) //Check if the role has permission
                     {
-                        if (Role.Name == "@everyone")
-                            continue;
                         if (RoleHasPermission(Context.Guild, Role, Aliases[i]))
                             return true;
                     }
