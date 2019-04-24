@@ -120,7 +120,7 @@ namespace Kurumi.Modules.Search.AniList
                     .WithColor(Config.EmbedColor)
                     .WithFooter(lang["manga/anime_powered"])
                     .WithImageUrl(Char.Image)
-                    .WithTitle(Char.Name)
+                    .WithTitle(Char.Name ?? Char.NativeName)
                     .AddField(lang["character_native_name"], Char.NativeName ?? "-")
                     .AddField(lang["manga/anime_description"], string.IsNullOrEmpty(Char.Description) ? "-" : Char.Description.Length > 1024 ? Char.Description.Truncate(1021) + "..." : Char.Description));
                 await Utilities.Log(new LogMessage(LogSeverity.Info, "Character", "success"), Context);

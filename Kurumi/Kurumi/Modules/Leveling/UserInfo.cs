@@ -60,7 +60,10 @@ namespace Kurumi.Modules.Leveling
             }
             catch (Exception ex)
             {
-                await Utilities.Log(new LogMessage(LogSeverity.Error, "Userinfo", null, ex), Context);
+                if (ex is ExternalException extEx && extEx.Message == "A generic error occurred in GDI+.")
+                    await Utilities.Log(new LogMessage(LogSeverity.Warning, "UserInfo", extEx.Message), Context);
+                else
+                    await Utilities.Log(new LogMessage(LogSeverity.Error, "Userinfo", null, ex), Context);
             }
         }
 

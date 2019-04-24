@@ -64,9 +64,11 @@ namespace Kurumi.Modules.Games.Osu
                     return;
                 }
                 string Username = $"{Player.Name} ({Mode})";
-                Player.Level = Player.Level.Truncate(5);
-                string Level = Player.Level.Split('.')[0];
-                string Percentage = Player.Level.Split('.')[1];
+
+
+                string level = double.Parse(Player.Level).ToString("##0.00");
+                string Level = level.Split('.')[0];
+                string Percentage = level.Split('.')[1];
 
                 //Send
                 await Context.Channel.SendEmbedAsync(new EmbedBuilder()

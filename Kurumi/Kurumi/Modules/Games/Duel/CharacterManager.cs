@@ -47,7 +47,7 @@ namespace Kurumi.Modules.Games.Duel
                     return;
                 }
 
-                CharacterDatabase.Characters.Add(new Character()
+                var c = new Character()
                 {
                     Data = new CharacterData()
                     {
@@ -69,10 +69,12 @@ namespace Kurumi.Modules.Games.Duel
                         Shirt = CharacterDatabase.GetItem(4) ?? new Item(),
                         Coat = CharacterDatabase.GetItem(5) ?? new Item(),
                         Leggings = CharacterDatabase.GetItem(6) ?? new Item(),
-                        Glove = CharacterDatabase.GetItem(7) ?? new Item()
+                        Glove = CharacterDatabase.GetItem(7) ?? new Item(),
+                        BaseValues = CharacterDatabase.GetItem(x => x.Name == "Default") ?? new Item()
                     }
-                });
-
+                };
+                c.Equipment.CharData = c.Data;
+                CharacterDatabase.Characters.Add(c);
                 await Context.Channel.SendEmbedAsync(lang["character_create_success", "NAME", Name]);
                 await Utilities.Log(new LogMessage(LogSeverity.Info, "CreateCharacter", "success"), Context);
             }
