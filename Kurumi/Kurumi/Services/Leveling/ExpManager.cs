@@ -16,7 +16,7 @@ namespace Kurumi.Services.Leveling
 {
     public class ExpManager
     {
-        private static (DateTime time, List<ulong>[] ranks) RankingCache = (new DateTime(1970, 1, 1), null);
+        private static (DateTime time, IGuild guild, List<ulong>[] ranks) RankingCache = (new DateTime(1970, 1, 1), null, null);
 
         public static async Task AddExp(ICommandContext context, uint Amount = 1)
         {
@@ -79,7 +79,7 @@ namespace Kurumi.Services.Leveling
         public static List<ulong>[] GetRanking(IGuild guild, IDiscordClient client)
         {
             //Check cache
-            if (DateTime.Now.Subtract(RankingCache.time).TotalSeconds < 30)
+            if (DateTime.Now.Subtract(RankingCache.time).TotalSeconds < 30 && RankingCache.guild.Id == guild.Id)
                 return RankingCache.ranks;
             //Calculate global rank
             Dictionary<ulong, uint> RankableUsers = new Dictionary<ulong, uint>();
@@ -110,7 +110,7 @@ namespace Kurumi.Services.Leveling
                 SUsers.Add(User.Key);
             //Cache and return list
             var Ranking = new List<ulong>[2] { Users, SUsers };
-            RankingCache = (DateTime.Now, Ranking);
+            RankingCache = (DateTime.Now, guild, Ranking);
             return Ranking;
         }
 
