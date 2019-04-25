@@ -38,8 +38,8 @@ namespace Kurumi.Services.Leveling
                 //Server level
 
                 //Get increment
-                var config = GuildConfigDatabase.Get(context.Guild.Id);
-                var increment = config == null ? GuildConfigDatabase.INC_GUILD : (uint)config.Inc;
+                var config = GuildConfigDatabase.GetOrFake(context.Guild.Id);
+                var increment = (uint)config.Inc;
 
                 //Add exp
                 var gUser = GuildUserDatabase.GetOrCreate(context.Guild.Id, context.User.Id);

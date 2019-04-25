@@ -2,10 +2,12 @@
 using Discord.Commands;
 using Kurumi.Common;
 using Kurumi.Common.Extensions;
+using Kurumi.Services.Database;
 using Kurumi.Services.Database.Databases;
 using Kurumi.Services.Leveling;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -89,6 +91,7 @@ namespace Kurumi.Modules.Leveling
         }
 
         [Command("clearleaderboard")]
+        [Alias("resetleaderboard")]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.Administrator)]
         public async Task ClearLeaderboard()
@@ -104,6 +107,35 @@ namespace Kurumi.Modules.Leveling
             catch (Exception ex)
             {
                 await Utilities.Log(new LogMessage(LogSeverity.Error, "ClearLeaderboard", null, ex), Context);
+            }
+        }
+
+        [Command("pruneleaderboard")]
+        [RequireContext(ContextType.Guild)]
+        [RequireUserPermission(GuildPermission.Administrator)]
+        public async Task PruneLeaderboard()
+        {
+            try
+            {
+                var lang = Language.GetLanguage(Context.Guild);
+                await Context.Channel.SendEmbedAsync(lang["pruneleaderboard_start"]);
+                var GuildUsers = GuildUserDatabase.GetOrFake(Context.Guild.Id);
+                foreach (var User in GuildUsers)
+                {
+                    if ((await Context.Guild.GetUserAsync(User.Key)) == null)
+                    {
+                        string path = $"{KurumiPathConfig.GuildDatabase}{Context.Guild.Id}{KurumiPathConfig.Separator}Users";
+                        if (Directory.Exists(path))
+                            Directory.Delete(path, true);
+                        GuildUsers.TryRemove(User.Key, out _);
+                    }
+                }
+                await Context.Channel.SendEmbedAsync(lang["pruneleaderboard_done"]);
+                await Utilities.Log(new LogMessage(LogSeverity.Info, "PruneLeaderboard", "success"), Context);
+            }
+            catch (Exception ex)
+            {
+                await Utilities.Log(new LogMessage(LogSeverity.Error, "PruneLeaderboard", null, ex), Context);
             }
         }
     }

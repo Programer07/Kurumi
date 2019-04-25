@@ -771,7 +771,7 @@
 		"Category": "Leveling",
 		"Command": "ClearLeaderboard",
 		"Usage": "@PREFIX@clearleaderboard",
-		"Alias": "-",
+		"Alias": "resetleaderboard",
 		"Description": "Clears the server leaderboard. Only users with ``admin`` permission can use this command!",
 		"HasPermission": true
 	},
@@ -807,12 +807,20 @@
 		"Description": "Send the role's discord id.",
 		"HasPermission": true
 	},
-	{
-		"Category": "Utilities",
-		"Command": "ServerIcon",
-		"Usage": "@PREFIX@servericon",
-		"Alias": "-",
-		"Description": "Send the server's icon.",
-		"HasPermission": true
-	},
+  {
+    "Category": "Utilities",
+    "Command": "ServerIcon",
+    "Usage": "@PREFIX@servericon",
+    "Alias": "-",
+    "Description": "Send the server's icon.",
+    "HasPermission": true
+  },
+  {
+    "Category": "Leveling",
+    "Command": "PruneLeaderboard",
+    "Usage": "@PREFIX@pruneleaderboard",
+    "Alias": "-",
+    "Description": "Remove users who left the guild.",
+    "HasPermission": true
+  },
 ]
