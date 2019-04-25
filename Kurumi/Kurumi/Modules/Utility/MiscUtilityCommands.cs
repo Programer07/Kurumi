@@ -142,7 +142,7 @@ namespace Kurumi.Modules.Utility
                 else
                     User = await Utilities.GetUser(Context.Guild, user);
                 var lang = Language.GetLanguage(Context.Guild);
-                if (user == null)
+                if (User == null)
                 {
                     await Context.Channel.SendEmbedAsync(lang["util_user_not_found"]);
                     return;
