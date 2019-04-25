@@ -124,7 +124,6 @@ namespace Kurumi.Modules.Leveling
                 Font StatusFont = new Font("Arial", 32, FontStyle.Regular);
                 if (user.Activity != null)
                 {
-                    Console.WriteLine(user.Activity.Type.ToString() + " " + user.Activity.Name.ToString());
                     BoardGraphics.DrawString(user.Activity.Type.ToString() + " " + user.Activity.Name.ToString(), StatusFont, UsernameBrush,
                         new PointF(UsernamePoint.X + 65, UsernamePoint.Y + 107));
                 }
