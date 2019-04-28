@@ -47,9 +47,9 @@ namespace Kurumi.Common
                 if (Config.BotlistApiKey == null)
                     return true; //Disabled, self hosted bots shouldn't have limitations.
                 await Get();
-                if (!File.Exists(KurumiPathConfig.DbRoot + "Voters.json"))
+                if (!File.Exists(KurumiPathConfig.Data + "Voters.json"))
                     return false;
-                string VoterList = File.ReadAllText(KurumiPathConfig.DbRoot + "Voters.json");
+                string VoterList = File.ReadAllText(KurumiPathConfig.Data + "Voters.json");
                 return VoterList.Contains(user.ToString());
             }
             catch (Exception)
@@ -71,7 +71,7 @@ namespace Kurumi.Common
                     string voterList = null;
                     foreach (User voter in users)
                         voterList += voter.id + ",";
-                    File.WriteAllText(KurumiPathConfig.DbRoot + "Voters.json", voterList);
+                    File.WriteAllText(KurumiPathConfig.Data + "Voters.json", voterList);
                 }
 
             }

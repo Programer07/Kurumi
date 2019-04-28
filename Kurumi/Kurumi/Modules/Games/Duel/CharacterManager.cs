@@ -2,9 +2,9 @@
 using Discord.Commands;
 using Kurumi.Common;
 using Kurumi.Common.Extensions;
-using Kurumi.Modules.Games.Duel.Database;
 using Kurumi.Services.Database;
 using Kurumi.Services.Database.Databases;
+using Kurumi.Services.Database.Models;
 using Kurumi.Services.Random;
 using System;
 using System.Collections.Generic;
@@ -31,7 +31,7 @@ namespace Kurumi.Modules.Games.Duel
             try
             {
                 var lang = Language.GetLanguage(Context.Guild);
-                if (Name == null || !DirectoryExtensions.PathIsValid(KurumiPathConfig.CharacterDatabase + Name) || Name.EndsWith("."))
+                if (Name == null || !DirectoryExtensions.PathIsValid(KurumiPathConfig.ProfilePictures + Name) || Name.EndsWith("."))
                 {
                     await Context.Channel.SendEmbedAsync(lang["character_bad_name"]);
                     return;
@@ -49,31 +49,24 @@ namespace Kurumi.Modules.Games.Duel
 
                 var c = new Character()
                 {
-                    Data = new CharacterData()
-                    {
-                        Ai = false,
-                        Exp = 0,
-                        Name = Name,
-                        Owner = Context.User.Id,
-                        ProfilePicture = null
-                    },
-                    Equipment = new CharacterEquipment()
-                    {
-                        A = 10,
-                        Y = 9,
-                        X = 8,
-                        Inventory = new List<PlayerItem>(),
-                        Weapon = CharacterDatabase.GetItem(1) ?? new Item(),
-                        Boots = CharacterDatabase.GetItem(2) ?? new Item(),
-                        Hat = CharacterDatabase.GetItem(3) ?? new Item(),
-                        Shirt = CharacterDatabase.GetItem(4) ?? new Item(),
-                        Coat = CharacterDatabase.GetItem(5) ?? new Item(),
-                        Leggings = CharacterDatabase.GetItem(6) ?? new Item(),
-                        Glove = CharacterDatabase.GetItem(7) ?? new Item(),
-                        BaseValues = CharacterDatabase.GetItem(x => x.Name == "Default") ?? new Item()
-                    }
+                    Ai = false,
+                    Exp = 0,
+                    Name = Name,
+                    Owner = Context.User.Id,
+                    ProfilePicture = null,
+                    A = 10,
+                    Y = 9,
+                    X = 8,
+                    Inventory = new List<PlayerItem>(),
+                    Weapon = CharacterDatabase.GetItem(1) ?? new Item(),
+                    Boots = CharacterDatabase.GetItem(2) ?? new Item(),
+                    Hat = CharacterDatabase.GetItem(3) ?? new Item(),
+                    Shirt = CharacterDatabase.GetItem(4) ?? new Item(),
+                    Coat = CharacterDatabase.GetItem(5) ?? new Item(),
+                    Leggings = CharacterDatabase.GetItem(6) ?? new Item(),
+                    Glove = CharacterDatabase.GetItem(7) ?? new Item(),
+                    BaseValues = CharacterDatabase.GetItem(x => x.Name == "Default") ?? new Item()
                 };
-                c.Equipment.CharData = c.Data;
                 CharacterDatabase.Characters.Add(c);
                 await Context.Channel.SendEmbedAsync(lang["character_create_success", "NAME", Name]);
                 await Utilities.Log(new LogMessage(LogSeverity.Info, "CreateCharacter", "success"), Context);
@@ -95,8 +88,8 @@ namespace Kurumi.Modules.Games.Duel
                     await Context.Channel.SendEmbedAsync(lang["character_no_character"]);
                     return;
                 }
-                await CharacterDatabase.DeleteCharacter(Character);
-                await Context.Channel.SendEmbedAsync(lang["character_deleted", "NAME", Character.Data.Name]);
+                CharacterDatabase.Characters.Remove(Character);
+                await Context.Channel.SendEmbedAsync(lang["character_deleted", "NAME", Character.Name]);
                 await Utilities.Log(new LogMessage(LogSeverity.Info, "DeleteCharacter", "success"), Context);
             }
             catch (Exception ex)
@@ -134,15 +127,15 @@ namespace Kurumi.Modules.Games.Duel
 
                 var embed = new EmbedBuilder()
                     .WithColor(Config.EmbedColor)
-                    .WithTitle(Character.Data.Name)
+                    .WithTitle(Character.Name)
                     .AddField(lang["character_owner"], User.Username)
-                    .AddField(lang["character_stats"], $"▸{lang["character_hp"]}: {Character.Equipment.TotalHP()}\n▸{lang["character_damage"]}: {Character.Equipment.TotalDamage()}\n" +
-                                       $"▸{lang["character_resistance"]}: {Character.Equipment.TotalResistance()}\n▸{lang["character_resistance_pen"]}: {Character.Equipment.TotalResPenetration()}\n" +
-                                       $"▸{lang["character_critical"]}: {Character.Equipment.TotalCritChance()}%\n▸{lang["character_critical_multiplier"]}: {Character.Equipment.TotalCritMultiplier()}x")
-                    .AddField(lang["character_level"], $"▸{lang["character_exp"]}: {Character.Data.Exp}\n▸{lang["character_level"]}: {Character.Data.GetLevel()}");
+                    .AddField(lang["character_stats"], $"▸{lang["character_hp"]}: {Character.TotalHP()}\n▸{lang["character_damage"]}: {Character.TotalDamage()}\n" +
+                                       $"▸{lang["character_resistance"]}: {Character.TotalResistance()}\n▸{lang["character_resistance_pen"]}: {Character.TotalResPenetration()}\n" +
+                                       $"▸{lang["character_critical"]}: {Character.TotalCritChance()}%\n▸{lang["character_critical_multiplier"]}: {Character.TotalCritMultiplier()}x")
+                    .AddField(lang["character_level"], $"▸{lang["character_exp"]}: {Character.Exp}\n▸{lang["character_level"]}: {Character.GetLevel()}");
 
-                if (Character.Data.ProfilePicture != null)
-                    embed.WithThumbnailUrl((Config.SSLEnabled ? "https://" : "http://") + "api.kurumibot.moe/characters/" + HttpUtility.UrlEncode(Character.Data.Name) + "/" + Character.Data.ProfilePicture);
+                if (Character.ProfilePicture != null)
+                    embed.WithThumbnailUrl((Config.SSLEnabled ? "https://" : "http://") + "api.kurumibot.moe/profilepictures/" + Character.ProfilePicture);
                 await Context.Channel.SendEmbedAsync(embed);
                 await Utilities.Log(new LogMessage(LogSeverity.Info, "CharacterInfo", "success"), Context);
             }
@@ -166,14 +159,14 @@ namespace Kurumi.Modules.Games.Duel
 
                 await Context.Channel.SendEmbedAsync(new EmbedBuilder()
                     .WithColor(Config.EmbedColor)
-                    .AddField(lang["character_equipment"], $"▸**{lang["character_weapon"]}** {Character.Equipment.Weapon?.ToString(lang) ?? "-"}\n" +
-                                                           $"▸**{lang["character_hat"]}** {Character.Equipment.Hat?.ToString(lang) ?? "-"}\n" +
-                                                           $"▸**{lang["character_coat"]}** {Character.Equipment.Coat?.ToString(lang) ?? "-"}\n" +
-                                                           $"▸**{lang["character_shirt"]}** {Character.Equipment.Shirt?.ToString(lang) ?? "-"}\n" +
-                                                           $"▸**{lang["character_glove"]}** {Character.Equipment.Glove?.ToString(lang) ?? "-"}\n" +
-                                                           $"▸**{lang["character_leggings"]}** {Character.Equipment.Leggings?.ToString(lang) ?? "-"}\n" +
-                                                           $"▸**{lang["character_boots"]}** {Character.Equipment.Boots?.ToString(lang) ?? "-"}\n")
-                    .AddField(lang["character_inv_title", "COUNT", Character.Equipment.Inventory.Count, "MAX", MAX_INVENTORY], $"```{Character.Equipment.InventoryToString(lang).Remove("**")}```"));
+                    .AddField(lang["character_equipment"], $"▸**{lang["character_weapon"]}** {Character.Weapon?.ToString(lang) ?? "-"}\n" +
+                                                           $"▸**{lang["character_hat"]}** {Character.Hat?.ToString(lang) ?? "-"}\n" +
+                                                           $"▸**{lang["character_coat"]}** {Character.Coat?.ToString(lang) ?? "-"}\n" +
+                                                           $"▸**{lang["character_shirt"]}** {Character.Shirt?.ToString(lang) ?? "-"}\n" +
+                                                           $"▸**{lang["character_glove"]}** {Character.Glove?.ToString(lang) ?? "-"}\n" +
+                                                           $"▸**{lang["character_leggings"]}** {Character.Leggings?.ToString(lang) ?? "-"}\n" +
+                                                           $"▸**{lang["character_boots"]}** {Character.Boots?.ToString(lang) ?? "-"}\n")
+                    .AddField(lang["character_inv_title", "COUNT", Character.Inventory.Count, "MAX", MAX_INVENTORY], $"```{Character.InventoryToString(lang).Remove("**")}```"));
                 await Utilities.Log(new LogMessage(LogSeverity.Info, "Inventory", "success"), Context);
             }
             catch (Exception ex)
@@ -275,6 +268,11 @@ namespace Kurumi.Modules.Games.Duel
                     await Context.Channel.SendEmbedAsync(lang["character_no_character"]);
                     return;
                 }
+                else if (ItemName == null)
+                {
+                    await Context.Channel.SendEmbedAsync(lang["character_invalid_item"]);
+                    return;
+                }
                 //Check if the name has a '(any number)' at the end
                 int Index = 1;//^..^
                 if (new Regex(@"^.+\s*[(]\d+[)]$").IsMatch(ItemName))
@@ -294,51 +292,51 @@ namespace Kurumi.Modules.Games.Duel
                     return;
                 }
                 //Check if the character has the item
-                if (!Character.Equipment.HasItem(item))
+                if (!Character.HasItem(item))
                 {
                     await Context.Channel.SendEmbedAsync(lang["character_doesnt_have_item"]);
                     return;
                 }
 
                 //Get the new item from the inventory
-                int i = Character.Equipment.Inventory.FindIndexN(x => x.Id == item.Id, Index);
-                PlayerItem NewItem = Character.Equipment.Inventory[i];
+                int i = Character.Inventory.FindIndexN(x => x.Id == item.Id, Index);
+                PlayerItem NewItem = Character.Inventory[i];
                 //Replace item
                 PlayerItem OldItem = null;
                 switch (item.Type)
                 {
                     case ItemType.Weapon:
-                        OldItem = Character.Equipment.Weapon;
-                        Character.Equipment.Weapon = NewItem;
+                        OldItem = Character.Weapon;
+                        Character.Weapon = NewItem;
                         break;
                     case ItemType.Boots:
-                        OldItem = Character.Equipment.Boots;
-                        Character.Equipment.Boots = NewItem;
+                        OldItem = Character.Boots;
+                        Character.Boots = NewItem;
                         break;
                     case ItemType.Hat:
-                        OldItem = Character.Equipment.Hat;
-                        Character.Equipment.Hat = NewItem;
+                        OldItem = Character.Hat;
+                        Character.Hat = NewItem;
                         break;
                     case ItemType.Shirt:
-                        OldItem = Character.Equipment.Shirt;
-                        Character.Equipment.Shirt = NewItem;
+                        OldItem = Character.Shirt;
+                        Character.Shirt = NewItem;
                         break;
                     case ItemType.Coat:
-                        OldItem = Character.Equipment.Coat;
-                        Character.Equipment.Coat = NewItem;
+                        OldItem = Character.Coat;
+                        Character.Coat = NewItem;
                         break;
                     case ItemType.Glove:
-                        OldItem = Character.Equipment.Glove;
-                        Character.Equipment.Glove = NewItem;
+                        OldItem = Character.Glove;
+                        Character.Glove = NewItem;
                         break;
                     case ItemType.Leggings:
-                        OldItem = Character.Equipment.Leggings;
-                        Character.Equipment.Leggings = NewItem;
+                        OldItem = Character.Leggings;
+                        Character.Leggings = NewItem;
                         break;
                 }
                 //Remove new and add old to the inventory
-                Character.Equipment.Inventory.Remove(NewItem);
-                Character.Equipment.Inventory.Add(OldItem);
+                Character.Inventory.Remove(NewItem);
+                Character.Inventory.Add(OldItem);
 
                 //Calculate changes
                 string Changes = string.Empty;
@@ -387,17 +385,22 @@ namespace Kurumi.Modules.Games.Duel
 
                 await Context.Message.DeleteAsync();
 
+
+                List<string> InvalidNames = new List<string>();
+                for (int i = 0; i < CharacterDatabase.Characters.Count; i++)
+                    InvalidNames.Add(CharacterDatabase.Characters[i].ProfilePicture);
+
                 var rng = new KurumiRandom();
             Get: //The name of the file has to be changed because discord caches images
                 int Name = rng.Next(10000, 99999);
-                if (Name.ToString() + ".png" == Character.Data.ProfilePicture)
+                if (InvalidNames.Contains(Name.ToString() + ".png"))
                     goto Get;
 
                 WebClient client = new WebClient();
                 Stream stream = client.OpenRead(url);
                 Bitmap bitmap = new Bitmap(stream);
 
-                bitmap.Save($"{KurumiPathConfig.CharacterDatabase}{Character.Data.Name}{KurumiPathConfig.Separator}{Name}.png", System.Drawing.Imaging.ImageFormat.Png);
+                bitmap.Save($"{KurumiPathConfig.ProfilePictures}{Name}.png", System.Drawing.Imaging.ImageFormat.Png);
                 bitmap.Dispose();
                 try
                 {
@@ -415,11 +418,11 @@ namespace Kurumi.Modules.Games.Duel
                 }
                 catch (Exception) { }
 
-                string p = $"{KurumiPathConfig.CharacterDatabase}{Character.Data.Name}{KurumiPathConfig.Separator}{Character.Data.ProfilePicture}";
+                string p = $"{KurumiPathConfig.ProfilePictures}{Character.ProfilePicture}";
                 if (File.Exists(p))
                     File.Delete(p);
 
-                Character.Data.ProfilePicture = Name + ".png";
+                Character.ProfilePicture = Name + ".png";
                 await Context.Channel.SendEmbedAsync(lang["character_profilepicture_changed"]);
                 await Utilities.Log(new LogMessage(LogSeverity.Info, "ProfilePicture", "success"), Context);
             }
@@ -440,7 +443,7 @@ namespace Kurumi.Modules.Games.Duel
                     await Context.Channel.SendEmbedAsync(lang["character_invalid_item"]);
                     return;
                 }
-                var User = GlobalUserDatabase.GetOrCreate(Context.User.Id);
+                var User = UserDatabase.GetOrCreate(Context.User.Id);
                 if (User.Credit < item.Price)
                 {
                     await Context.Channel.SendEmbedAsync(lang["character_no_money"]);
@@ -452,12 +455,12 @@ namespace Kurumi.Modules.Games.Duel
                     await Context.Channel.SendEmbedAsync(lang["character_no_character"]);
                     return;
                 }
-                else if (Character.Equipment.Inventory.Count == MAX_INVENTORY)
+                else if (Character.Inventory.Count == MAX_INVENTORY)
                 {
                     await Context.Channel.SendEmbedAsync(lang["character_inv_full"]);
                     return;
                 }
-                Character.Equipment.Inventory.Add(item);
+                Character.Inventory.Add(item);
                 User.Credit -= item.Price;
                 await Context.Channel.SendEmbedAsync(lang["character_bought", "ITEM", item.Name]);
                 await Utilities.Log(new LogMessage(LogSeverity.Info, "Buy", "success"), Context);
@@ -498,18 +501,18 @@ namespace Kurumi.Modules.Games.Duel
                     return;
                 }
                 //Check if the character has the item
-                if (!Character.Equipment.HasItem(item))
+                if (!Character.HasItem(item))
                 {
                     await Context.Channel.SendEmbedAsync(lang["character_doesnt_have_item"]);
                     return;
                 }
                 //Get user
-                var user = GlobalUserDatabase.GetOrCreate(Context.User.Id);
+                var user = UserDatabase.GetOrCreate(Context.User.Id);
                 //Add 90% of the price
                 user.Credit += (uint)Math.Ceiling(item.Price * 0.9);
                 //Get the item from the inventory and remove it
-                int i = Character.Equipment.Inventory.FindIndexN(x => x.Id == item.Id, Index);
-                Character.Equipment.Inventory.RemoveAt(i);
+                int i = Character.Inventory.FindIndexN(x => x.Id == item.Id, Index);
+                Character.Inventory.RemoveAt(i);
                 await Context.Channel.SendEmbedAsync(lang["character_sold", "ITEM", item.Name, "PRICE", (uint)Math.Ceiling(item.Price * 0.9)]);
                 await Utilities.Log(new LogMessage(LogSeverity.Info, "Sell", "success"), Context);
             }
@@ -536,7 +539,7 @@ namespace Kurumi.Modules.Games.Duel
                     await Context.Channel.SendEmbedAsync(lang["character_invalid_item"]);
                     return;
                 }
-                else if (!Character.Equipment.HasItem(item))
+                else if (!Character.HasItem(item))
                 {
                     await Context.Channel.SendEmbedAsync(lang["character_doesnt_have_item"]);
                     return;
@@ -549,20 +552,20 @@ namespace Kurumi.Modules.Games.Duel
                 switch (Slot)
                 {
                     case "x":
-                        Character.Equipment.Inventory.Add(CharacterDatabase.GetItem(Character.Equipment.X));
-                        Character.Equipment.X = item.Id;
+                        Character.Inventory.Add(CharacterDatabase.GetItem(Character.X));
+                        Character.X = item.Id;
                         break;
                     case "y":
-                        Character.Equipment.Inventory.Add(CharacterDatabase.GetItem(Character.Equipment.Y));
-                        Character.Equipment.Y = item.Id;
+                        Character.Inventory.Add(CharacterDatabase.GetItem(Character.Y));
+                        Character.Y = item.Id;
                         break;
                     case "a":
-                        Character.Equipment.Inventory.Add(CharacterDatabase.GetItem(Character.Equipment.A));
-                        Character.Equipment.A = item.Id;
+                        Character.Inventory.Add(CharacterDatabase.GetItem(Character.A));
+                        Character.A = item.Id;
                         break;
                 }
-                int i = Character.Equipment.Inventory.FindIndexN(x => x.Id == item.Id, 1);
-                Character.Equipment.Inventory.Remove(Character.Equipment.Inventory[i]);
+                int i = Character.Inventory.FindIndexN(x => x.Id == item.Id, 1);
+                Character.Inventory.Remove(Character.Inventory[i]);
                 await Context.Channel.SendEmbedAsync(lang["character_skill_equipped", "ITEM", item.Name, "SLOT", Slot.ToUpper()]);
                 await Utilities.Log(new LogMessage(LogSeverity.Info, "Skill", "success"), Context);
             }

@@ -4,8 +4,10 @@ using Kurumi.Common;
 using Kurumi.Common.Extensions;
 using Kurumi.Services.Database;
 using Kurumi.Services.Database.Databases;
+using Kurumi.Services.Database.Models;
 using Kurumi.Services.Leveling;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -64,9 +66,9 @@ namespace Kurumi.Modules.Leveling
                 //Create embed
                 EmbedBuilder embed = new EmbedBuilder();
                 embed.WithColor(Config.EmbedColor);
-                embed.WithTitle(lang["leaderboard_title", "BOARD", leaderboard == 0 ? "Global" : "Server", "PAGE", (Page + 1).ToString(), "MAX", Math.Ceiling((double)Ranking.Count / 10).ToString()]);
+                embed.WithTitle(lang["leaderboard_title", "BOARD", leaderboard == 0 ? "Global" : "Server", "PAGE", (Page + 1).ToString(), "MAX", Math.Ceiling((double)Ranking.Count / PAGE_LENGTH).ToString()]);
                 //Add all user
-                uint Increment = leaderboard == 0 ? GuildConfigDatabase.INC_GLOBAL : (uint)GuildConfigDatabase.GetOrFake(Context.Guild.Id).Inc;
+                uint Increment = leaderboard == 0 ? GuildDatabase.INC_GLOBAL : (uint)GuildDatabase.GetOrFake(Context.Guild.Id).Increment;
                 for (int i = 0; i < PAGE_LENGTH; i++)
                 {
                     int Index = Page * PAGE_LENGTH + i;
@@ -75,9 +77,9 @@ namespace Kurumi.Modules.Leveling
                     IUser User = Context.Client.GetUserAsync(Ranking[Index]).Result;
                     uint Exp;
                     if (leaderboard == 0)
-                        Exp = GlobalUserDatabase.Get(User.Id).Exp;
+                        Exp = UserDatabase.Get(User.Id).Exp;
                     else
-                        Exp = GuildUserDatabase.Get(Context.Guild.Id, User.Id).Exp;
+                        Exp = GuildDatabase.Get(Context.Guild.Id, User.Id).Exp;
                     embed.AddField($"#{Index + 1}) {User.Username}", lang["leaderboard_user", "EXP", Exp, "LEVEL", ExpManager.Level(Exp, Increment)]);
                 }
                 //Send
@@ -90,23 +92,39 @@ namespace Kurumi.Modules.Leveling
             }
         }
 
-        [Command("clearleaderboard")]
-        [Alias("resetleaderboard")]
+        [Command("resetleaderboard")]
+        [Alias("clearleaderboard")]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(GuildPermission.Administrator)]
-        public async Task ClearLeaderboard()
+        public async Task ClearLeaderboard([Optional, Remainder]string User)
         {
             try
             {
                 var lang = Language.GetLanguage(Context.Guild);
-                await Context.Channel.SendEmbedAsync(lang["clearleaderboard_start"]);
-                ExpManager.ClearGuildRanking(Context.Guild);
-                await Context.Channel.SendEmbedAsync(lang["clearleaderboard_done"]);
-                await Utilities.Log(new LogMessage(LogSeverity.Info, "ClearLeaderboard", "success"), Context);
+                if (User != null)
+                {
+                    IUser user = await Utilities.GetUser(Context.Guild, User);
+                    if (user == null)
+                    {
+                        await Context.Channel.SendEmbedAsync(lang["resetleaderboard_not_found"]);
+                        return;
+                    }
+                    var guild = GuildDatabase.GetOrFake(Context.Guild.Id);
+                    if (guild._Users.ContainsKey(user.Id))
+                        guild._Users.TryRemove(user.Id, out _);
+                    await Context.Channel.SendEmbedAsync(lang["resetleaderboard_single"]);
+                }
+                else
+                {
+                    await Context.Channel.SendEmbedAsync(lang["resetleaderboard_start"]);
+                    GuildDatabase.GetOrFake(Context.Guild.Id)._Users = new ConcurrentDictionary<ulong, GUser>();
+                    await Context.Channel.SendEmbedAsync(lang["resetleaderboard_done"]);
+                }
+                await Utilities.Log(new LogMessage(LogSeverity.Info, "ResetLeaderboard", "success"), Context);
             }
             catch (Exception ex)
             {
-                await Utilities.Log(new LogMessage(LogSeverity.Error, "ClearLeaderboard", null, ex), Context);
+                await Utilities.Log(new LogMessage(LogSeverity.Error, "ResetLeaderboard", null, ex), Context);
             }
         }
 
@@ -119,15 +137,12 @@ namespace Kurumi.Modules.Leveling
             {
                 var lang = Language.GetLanguage(Context.Guild);
                 await Context.Channel.SendEmbedAsync(lang["pruneleaderboard_start"]);
-                var GuildUsers = GuildUserDatabase.GetOrFake(Context.Guild.Id);
+                var GuildUsers = GuildDatabase.GetOrFake(Context.Guild.Id)._Users;
                 foreach (var User in GuildUsers)
                 {
                     if ((await Context.Guild.GetUserAsync(User.Key)) == null)
                     {
-                        string path = $"{KurumiPathConfig.GuildDatabase}{Context.Guild.Id}{KurumiPathConfig.Separator}Users";
-                        if (Directory.Exists(path))
-                            Directory.Delete(path, true);
-                        GuildUsers.TryRemove(User.Key, out _);
+                        GuildDatabase.Set(Context.Guild.Id, Context.User.Id, null);
                     }
                 }
                 await Context.Channel.SendEmbedAsync(lang["pruneleaderboard_done"]);

@@ -48,7 +48,7 @@ namespace Kurumi.Modules.ColorRoles
                 {
                     await Context.Channel.SendEmbedAsync(lang["color_creating"]);
 
-                    var GuildConfig = GuildConfigDatabase.GetOrCreate(Context.Guild.Id);
+                    var GuildConfig = GuildDatabase.GetOrCreate(Context.Guild.Id);
                     var GuildRoleNames = GuildColorRoles.ConvertAll(x => x.Name);
                     for (int i = 0; i < DefaultRoles.Count; i++)
                     {
@@ -150,7 +150,7 @@ namespace Kurumi.Modules.ColorRoles
                 }
                 Color color = new Color(ColorValue);
                 IRole role = await CreateRole(Role, color);
-                GuildConfigDatabase.GetOrCreate(Context.Guild.Id).ColorRoles.Add(role.Id);
+                GuildDatabase.GetOrCreate(Context.Guild.Id).ColorRoles.Add(role.Id);
                 await Context.Channel.SendEmbedAsync(lang["color_success_set", "ROLE", role.Name]);
                 await Utilities.Log(new LogMessage(LogSeverity.Info, "AddColorRole", "success"), Context);
             }
@@ -180,7 +180,7 @@ namespace Kurumi.Modules.ColorRoles
                     await Context.Channel.SendEmbedAsync(lang["color_doesnt_exists"]);
                     return;
                 }
-                List<ulong> CustomRoles = GuildConfigDatabase.GetOrFake(Context.Guild.Id).ColorRoles;
+                List<ulong> CustomRoles = GuildDatabase.GetOrFake(Context.Guild.Id).ColorRoles;
                 if (!CustomRoles.Contains(role.Id))
                 {
                     await Context.Channel.SendEmbedAsync(lang["color_not_color"]);
@@ -199,7 +199,7 @@ namespace Kurumi.Modules.ColorRoles
         private List<IRole> GetRoles()
         {
             var Roles = new List<IRole>();
-            var RoleIds = GuildConfigDatabase.Get(Context.Guild.Id)?.ColorRoles;
+            var RoleIds = GuildDatabase.Get(Context.Guild.Id)?.ColorRoles;
             if (RoleIds == null)
                 return Roles;
             for (int i = 0; i < RoleIds.Count; i++)

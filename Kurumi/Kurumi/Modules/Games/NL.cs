@@ -105,7 +105,7 @@ namespace Kurumi.Modules.Games
                     await Context.Channel.SendEmbedAsync(lang["rr_min_bet"]);
                     return;
                 }
-                if (((temp * 12) / 2) > GlobalUserDatabase.GetOrCreate(Context.User.Id).Credit)
+                if (((temp * 12) / 2) > UserDatabase.GetOrCreate(Context.User.Id).Credit)
                 {
                     await Context.Channel.SendEmbedAsync(lang["rr_no_money"]);
                     return;
@@ -120,13 +120,13 @@ namespace Kurumi.Modules.Games
                 {
                     embed.WithDescription(lang["rr_win", "BET", bet, "MONEY", Math.Round(float.Parse(bet) * 1.5f).ToString()]);
                     await msg.ModifyAsync(x => x.Embed = embed.Build());
-                    GlobalUserDatabase.Get(Context.User.Id).Credit += (temp * 2);
+                    UserDatabase.Get(Context.User.Id).Credit += (temp * 2);
                 }
                 else
                 {
                     embed.WithDescription(lang["rr_lose", "BET", bet, "MONEY", (temp * 12).ToString()]);
                     await msg.ModifyAsync(x => x.Embed = embed.Build());
-                    GlobalUserDatabase.Get(Context.User.Id).Credit -= (temp * 12);
+                    UserDatabase.Get(Context.User.Id).Credit -= (temp * 12);
                 }
 
                 await Utilities.Log(new LogMessage(LogSeverity.Info, "RussianRoulette", "success"), Context);
@@ -151,7 +151,7 @@ namespace Kurumi.Modules.Games
                     return;
                 }
                 //Check Money
-                if (GlobalUserDatabase.GetOrCreate(Context.User.Id).Credit < Bet)
+                if (UserDatabase.GetOrCreate(Context.User.Id).Credit < Bet)
                 {
                     await Context.Channel.SendEmbedAsync(lang["slot_not_enough"]);
                     return;
@@ -234,9 +234,9 @@ namespace Kurumi.Modules.Games
 
                 //Modify credit
                 if (count == 0)
-                    GlobalUserDatabase.Get(Context.User.Id).Credit -= Reward;
+                    UserDatabase.Get(Context.User.Id).Credit -= Reward;
                 else
-                    GlobalUserDatabase.Get(Context.User.Id).Credit += Reward;
+                    UserDatabase.Get(Context.User.Id).Credit += Reward;
 
                 await Utilities.Log(new LogMessage(LogSeverity.Info, "Slot", "success"), Context);
             }

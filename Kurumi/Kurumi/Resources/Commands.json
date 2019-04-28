@@ -1,826 +1,826 @@
 [
     {
-		"Category": "Misc",
-		"Command": "Help",
-		"Usage": "@PREFIX@help [command/category]",
-		"Alias": "h",
-		"Description": "Lists all Kurumi commands/categories.",
-		"HasPermission": false
-	},
-	{
-		"Category": "Music",
-		"Command": "Play",
-		"Usage": "@PREFIX@play <YT url / SoundCloud url / search>",
-		"Alias": "-",
-		"Description": "Plays music from Youtube/SoundCloud.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Music",
-		"Command": "AddQueue",
-		"Usage": "@PREFIX@addqueue <YT url / SoundCloud url / search>",
-		"Alias": "aq",
-		"Description": "Adds a music to the queue.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Music",
-		"Command": "RemoveQueue",
-		"Usage": "@PREFIX@removequeue <Url / Id>",
-		"Alias": "rq",
-		"Description": "Removes a music from the queue.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Music",
-		"Command": "ListQueue",
-		"Usage": "@PREFIX@listqueue",
-		"Alias": "lq",
-		"Description": "Lists all items in the queue.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Music",
-		"Command": "Leave",
-		"Usage": "@PREFIX@leave",
-		"Alias": "-",
-		"Description": "Kurumi leaves the voice channel and clears the queue.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Music",
-		"Command": "Skip",
-		"Usage": "@PREFIX@skip",
-		"Alias": "-",
-		"Description": "Plays the next music in the queue. If there are more then 3 useres in the voice channel a vote will be started.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Music",
-		"Command": "ForceSkip",
-		"Usage": "@PREFIX@forceskip",
-		"Alias": "fskip",
-		"Description": "Plays the next music in the queue.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Music",
-		"Command": "ListenMoe",
-		"Usage": "@PREFIX@listenmoe",
-		"Alias": "lm",
-		"Description": "Plays music from Listen.moe.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Music",
-		"Command": "Volume",
-		"Usage": "@PREFIX@volume <volume>",
-		"Alias": "-",
-		"Description": "Sets the volume of the music.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Music",
-		"Command": "Pause",
-		"Usage": "@PREFIX@pause",
-		"Alias": "resume",
-		"Description": "Pauses the music.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Misc",
-		"Command": "Say",
-		"Usage": "@PREFIX@say <text>",
-		"Alias": "-",
-		"Description": "Kurumi says the given text. You can set the title by using ``{title=<title text>}`` at the end.",
-		"HasPermission": true
-	},
-	{
-		"Category": "NSFW",
-		"Command": "Danbooru",
-		"Usage": "@PREFIX@danbooru [tag(s)]",
-		"Alias": "-",
-		"Description": "Sends nsfw images using the Danbooru API.",
-		"HasPermission": true
-	},
-	{
-		"Category": "NSFW",
-		"Command": "Boobs",
-		"Usage": "@PREFIX@boobs",
-		"Alias": "-",
-		"Description": "Describe boobs with images.",
-		"HasPermission": true
-	},
-	{
-		"Category": "NSFW",
-		"Command": "E621",
-		"Usage": "@PREFIX@E621 [tag(s)]",
-		"Alias": "-",
-		"Description": "Sends nsfw images using the E621 API.",
-		"HasPermission": true
-	},
-	{
-		"Category": "NSFW",
-		"Command": "Gelbooru",
-		"Usage": "@PREFIX@gelbooru [tag(s)]",
-		"Alias": "-",
-		"Description": "Sends nsfw images using the Gelbooru API.",
-		"HasPermission": true
-	},
-	{
-		"Category": "NSFW",
-		"Command": "Konachan",
-		"Usage": "@PREFIX@konachan [tag(s)]",
-		"Alias": "-",
-		"Description": "Sends nsfw images using the Konachan API.",
-		"HasPermission": true
-	},
-	{
-		"Category": "NSFW",
-		"Command": "Randomhentai",
-		"Usage": "@PREFIX@randomhentai [tag(s)]",
-		"Alias": "-",
-		"Description": "Sends nsfw images using a random API.",
-		"HasPermission": true
-	},
-	{
-		"Category": "NSFW",
-		"Command": "Rule34",
-		"Usage": "@PREFIX@rule34 [tag(s)]",
-		"Alias": "-",
-		"Description": "Sends nsfw images using the Rule34 API.",
-		"HasPermission": true
-	},
-	{
-		"Category": "NSFW",
-		"Command": "Yandere",
-		"Usage": "@PREFIX@yandere [tag(s)]",
-		"Alias": "-",
-		"Description": "Sends nsfw images using the Yandere API.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Leveling",
-		"Command": "UserInfo",
-		"Usage": "@PREFIX@userinfo [user]",
-		"Alias": "ui, profile, userprofile, rank",
-		"Description": "Sets the volume of the music.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Utilities",
-		"Command": "Avatar",
-		"Usage": "@PREFIX@avatar [user]",
-		"Alias": "-",
-		"Description": "Send the user's avatar.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Misc",
-		"Command": "Ping",
-		"Usage": "@PREFIX@ping",
-		"Alias": "-",
-		"Description": "Pong",
-		"HasPermission": false
-	},
-	{
-		"Category": "Misc",
-		"Command": "Support",
-		"Usage": "@PREFIX@support",
-		"Alias": "-",
-		"Description": "Invite link to the Kurumi support server. (Sends it in DM)",
-		"HasPermission": false
-	},
-	{
-		"Category": "Misc",
-		"Command": "Donate",
-		"Usage": "@PREFIX@donate",
-		"Alias": "-",
-		"Description": "Send patreon link.",
-		"HasPermission": false
-	},
-	{
-		"Category": "Misc",
-		"Command": "Invite",
-		"Usage": "@PREFIX@invite",
-		"Alias": "-",
-		"Description": "Sends bot invite link.",
-		"HasPermission": false
-	},
-	{
-		"Category": "Misc",
-		"Command": "Vote",
-		"Usage": "@PREFIX@vote",
-		"Alias": "-",
-		"Description": "Sends the discordbots.org link.",
-		"HasPermission": false
-	},
-	{
-		"Category": "Utilities",
-		"Command": "Emoji",
-		"Usage": "@PREFIX@emoji <emoji>",
-		"Alias": "-",
-		"Description": "Sends the image of the emoji.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Utilities",
-		"Command": "Nick",
-		"Usage": "@PREFIX@nick <nickname>",
-		"Alias": "-",
-		"Description": "Sets your nickname.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Image",
-		"Command": "Hug",
-		"Usage": "@PREFIX@hug [user]",
-		"Alias": "-",
-		"Description": "",
-		"HasPermission": true
-	},
-	{
-		"Category": "Image",
-		"Command": "Kick",
-		"Usage": "@PREFIX@kick [user]",
-		"Alias": "-",
-		"Description": "",
-		"HasPermission": true
-	},
-	{
-		"Category": "Image",
-		"Command": "Kiss",
-		"Usage": "@PREFIX@kiss [user]",
-		"Alias": "-",
-		"Description": "",
-		"HasPermission": true
-	},
-	{
-		"Category": "Image",
-		"Command": "Kurumi",
-		"Usage": "@PREFIX@kurumi",
-		"Alias": "-",
-		"Description": "",
-		"HasPermission": true
-	},
-	{
-		"Category": "Image",
-		"Command": "Pat",
-		"Usage": "@PREFIX@pat [user]",
-		"Alias": "-",
-		"Description": "",
-		"HasPermission": true
-	},
-	{
-		"Category": "Image",
-		"Command": "Slap",
-		"Usage": "@PREFIX@slap [user]",
-		"Alias": "-",
-		"Description": "",
-		"HasPermission": true
-	},
-	{
-		"Category": "Image",
-		"Command": "Lick",
-		"Usage": "@PREFIX@lick [user]",
-		"Alias": "-",
-		"Description": "",
-		"HasPermission": true
-	},
-	{
-		"Category": "Image",
-		"Command": "Stare",
-		"Usage": "@PREFIX@stare [user]",
-		"Alias": "-",
-		"Description": "",
-		"HasPermission": true
-	},
-	{
-		"Category": "Image",
-		"Command": "Triggered",
-		"Usage": "@PREFIX@triggered",
-		"Alias": "-",
-		"Description": "",
-		"HasPermission": true
-	},
-	{
-		"Category": "Image",
-		"Command": "Cry",
-		"Usage": "@PREFIX@cry [user]",
-		"Alias": "-",
-		"Description": "",
-		"HasPermission": true
-	},
-	{
-		"Category": "Image",
-		"Command": "Poke",
-		"Usage": "@PREFIX@poke [user]",
-		"Alias": "-",
-		"Description": "",
-		"HasPermission": true
-	},
-	{
-		"Category": "Misc",
-		"Command": "Sayc",
-		"Usage": "@PREFIX@sayc <message>",
-		"Alias": "sayd",
-		"Description": "Sends the given text and deletes the user's message. (For moderators: You can check who sent the message by using ``@PREIFX@wst <message id>``)",
-		"HasPermission": true
-	},
-	{
-		"Category": "Moderation",
-		"Command": "WhoSaidThis",
-		"Usage": "@PREFIX@whosaidthis <message id>",
-		"Alias": "wst",
-		"Description": "Sends who sent the message with ``sayc`` command. (Requires ``ManageMessages`` permission)",
-		"HasPermission": false
-	},
-	{
-		"Category": "Colors",
-		"Command": "Color",
-		"Usage": "@PREFIX@color [color role]",
-		"Alias": "-",
-		"Description": "Gives the user the selected color role. (If no role is given, Kurumi will list all color roles)",
-		"HasPermission": true
-	},
-	{
-		"Category": "Colors",
-		"Command": "CreateRoles",
-		"Usage": "@PREFIX@createroles",
-		"Alias": "-",
-		"Description": "Creates the default roles. (Only the guild owner can run this command)",
-		"HasPermission": false
-	},
-	{
-		"Category": "Colors",
-		"Command": "AddColorRole",
-		"Usage": "@PREFIX@addcolorrole <role name> <color (in hex)>",
-		"Alias": "-",
-		"Description": "Creates (or sets, if role already exists) a role as color role.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Colors",
-		"Command": "RemoveColorRole",
-		"Usage": "@PREFIX@removecolorrole <role name>",
-		"Alias": "-",
-		"Description": "Removes a role from the color role list (Doesn't delete the role).",
-		"HasPermission": true
-	},
-	{
-		"Category": "Game",
-		"Command": "Surrender",
-		"Usage": "@PREFIX@surrender",
-		"Alias": "-",
-		"Description": "Surrender the game.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Utilities",
-		"Command": "Language",
-		"Usage": "@PREFIX@language [language code]",
-		"Alias": "-",
-		"Description": "Sets the bot language on this server. (If language code is empty, it will send all available languages.)\nThe user must have ``ManageGuild`` permission to change language.",
-		"HasPermission": false
-	},
-	{
-		"Category": "Utilities",
-		"Command": "Prefix",
-		"Usage": "@PREFIX@prefix [new prefix]",
-		"Alias": "-",
-		"Description": "Sets the prefix for this server. (If prefix is empty, it will send the current prefix.)\nThe user must have ``ManageGuild`` permission to change the prefix.",
-		"HasPermission": false
-	},
-	{
-		"Category": "Utilities",
-		"Command": "Ranking",
-		"Usage": "@PREFIX@ranking [increment or state]",
-		"Alias": "-",
-		"Description": "Ranking settings, increment must be a number between **5** and **400** and it sets the difficulty of leveling up, state must be **true** or **false** and it sets if **server** ranking should be enabled or not.\nIf left empty, Kurumi will send the current settings.\nThe user must have ``ManageGuild`` permission to change or view the settings.",
-		"HasPermission": false
-	},
-	{
-		"Category": "Utilities",
-		"Command": "WelcomeChannel",
-		"Usage": "@PREFIX@welcomechannel [channel id/name/mention]",
-		"Alias": "-",
-		"Description": "Sets a channel as welcome channel and Kurumi will welcome the users with one of the set ``welcome messages`` in the channel. Use ``remove`` to remove the channel (Doesn't delete the channel!), leave it empty to get the current welcome channel.\nThe user must have ``ManageGuild`` permission to change or view the settings!",
-		"HasPermission": false
-	},
-	{
-		"Category": "Utilities",
-		"Command": "WelcomeMessage",
-		"Usage": "@PREFIX@welcomemessage <add/remove/list> <message/messageid/page>",
-		"Alias": "-",
-		"Description": "\n**Add:** Adds the message to the list of welcome messages.\n**Remove:** Remove the message at the given id from the list of welcome messages.\n**List:**Kurumi sends the welcome messages at the given page (If left empty, Kurumi will send page **1**).\nThe user must have ``ManageGuild`` permission to change or view the settings!",
-		"HasPermission": false
-	},
-	{
-		"Category": "Utilities",
-		"Command": "Permission",
-		"Usage": "@PREFIX@permission <add/remove/list/reset/copy> <role/role1;role2> [permission]",
-		"Alias": "-",
-		"Description": "\"Permission\" is the same as the command, The role must be: Id, name or mention, if the role name contains a ``space``, it **can't** be used!\n**Add:** Adds a **Kurumi** permission to a **discord** role. Usage: ``@PREFIX@permission add <role> <permission>``\n**Remove:** Removes a **Kurumi** permission from a **discord** role. Usage: ``@PREFIX@permission remove <role> <permission>``\n**List:** Lists all permissions the role has. Usage: ``@PREFIX@permission list <role>``\n**Reset:** Resets the permissions for a role. Usage: ``@PREFIX@permission reset <role>``\n**Copy**: Copies the permissions of ``Role1`` to ``Role2``. Usage: ``@PREFIX@permission copy <Role1>;<Role2>``\nThe user must have ``ManageGuild`` permission to change or view the permissions!",
-		"HasPermission": false
-	},
-	{
-		"Category": "Utilities",
-		"Command": "LevelReward",
-		"Usage": "@PREFIX@levelreward <list/add/remove> <level> <role>",
-		"Alias": "-",
-		"Description": "Sets a reward for the users reaching the set level.\n**List:** Lists all set rewards. Usage ``@PREFIX@levelreward list``\n**Add:** Adds role to a level. Usage: ``@PREFIX@levelreward add <level> <role>``\n**Remove:** Removes the reward at a level. Usage: ``@PREFIX@levelreward remove <level>``\nThe user must have ``ManageGuild`` permission to change or view the rewards!",
-		"HasPermission": false
-	},
-	{
-		"Category": "Music",
-		"Command": "Repeat",
-		"Usage": "@PREFIX@repeat",
-		"Alias": "-",
-		"Description": "Kurumi will repeat the currently playing song. (Use the command again to stop repeating.)",
-		"HasPermission": true
-	},
-	{
-		"Category": "Music",
-		"Command": "NowPlaying",
-		"Usage": "@PREFIX@nowplaying",
-		"Alias": "-",
-		"Description": "Sends the title of the currently playing song.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Music",
-		"Command": "Shuffle",
-		"Usage": "@PREFIX@shuffle",
-		"Alias": "-",
-		"Description": "Kurumi will play the songs in a random order from the queue. (Use the command again to stop.)",
-		"HasPermission": true
-	},
-	{
-		"Category": "Misc",
-		"Command": "Lenny",
-		"Usage": "@PREFIX@lenny",
-		"Alias": "-",
-		"Description": "Lenny face",
-		"HasPermission": false
-	},
-	{
-		"Category": "Misc",
-		"Command": "TableFlip",
-		"Usage": "@PREFIX@tableflip",
-		"Alias": "-",
-		"Description": "(╯°□°）╯︵ ┻━┻",
-		"HasPermission": false
-	},
-	{
-		"Category": "Misc",
-		"Command": "DoubleFlip",
-		"Usage": "@PREFIX@doubleflip",
-		"Alias": "-",
-		"Description": "┻━┻彡 ヽ(ಠДಠ)ノ彡┻━┻",
-		"HasPermission": false
-	},
-	{
-		"Category": "Game",
-		"Command": "Choose",
-		"Usage": "@PREFIX@choose <options>",
-		"Alias": "-",
-		"Description": "Kurumi chooses one of the options. (Options must be separated with \"**;**\"!)",
-		"HasPermission": true
-	},
-	{
-		"Category": "Game",
-		"Command": "Choose",
-		"Usage": "@PREFIX@choose <options>",
-		"Alias": "-",
-		"Description": "Kurumi chooses one of the options. (Options must be separated with \"**;**\"!)",
-		"HasPermission": true
-	},
-	{
-		"Category": "Misc",
-		"Command": "BotInfo",
-		"Usage": "@PREFIX@botinfo",
-		"Alias": "bi",
-		"Description": "-",
-		"HasPermission": false
-	},
-	{
-		"Category": "Search",
-		"Command": "Anime",
-		"Usage": "@PREFIX@anime <anime title>",
-		"Alias": "-",
-		"Description": "Sends details about the anime.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Search",
-		"Command": "Manga",
-		"Usage": "@PREFIX@manga <manga title>",
-		"Alias": "-",
-		"Description": "Sends details about the manga.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Search",
-		"Command": "Character",
-		"Usage": "@PREFIX@character <character name>",
-		"Alias": "-",
-		"Description": "Sends details about the character.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Search",
-		"Command": "UrbanDictionary",
-		"Usage": "@PREFIX@urbandictionary <word>",
-		"Alias": "ud, udict",
-		"Description": "Gets the definition of the word from [urbandictionary.com](https://urbandictionary.com/)",
-		"HasPermission": true
-	},
-	{
-		"Category": "Game",
-		"Command": "Osu",
-		"Usage": "@PREFIX@osu <player>",
-		"Alias": "-",
-		"Description": "Sends the player's osu profile.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Game",
-		"Command": "RussianRoulette",
-		"Usage": "@PREFIX@russianroulette <bet>",
-		"Alias": "rr",
-		"Description": "Puts 1 bullet in a revolver and spins the cylinder. If you survive you win 1,5x your bet, if you lose, you lose 12x the bet!",
-		"HasPermission": true
-	},
-	{
-		"Category": "Moderation",
-		"Command": "Purge",
-		"Usage": "@PREFIX@purge <number of messages>",
-		"Alias": "clear",
-		"Description": "Deletes messages.",
-		"HasPermission": false
-	},
-	{
-		"Category": "Moderation",
-		"Command": "KickUser",
-		"Usage": "@PREFIX@kickuser <user> [reason]",
-		"Alias": "-",
-		"Description": "Kicks the user.",
-		"HasPermission": false
-	},
-	{
-		"Category": "Moderation",
-		"Command": "Ban",
-		"Usage": "@PREFIX@ban <user> [reason]",
-		"Alias": "-",
-		"Description": "Bans the user.",
-		"HasPermission": false
-	},
-	{
-		"Category": "Moderation",
-		"Command": "PruneBan",
-		"Usage": "@PREFIX@pruneban <user> <days> [reason]",
-		"Alias": "-",
-		"Description": "Bans the user and deletes the messages.",
-		"HasPermission": false
-	},
-	{
-		"Category": "Utilities",
-		"Command": "ChannelName",
-		"Usage": "@PREFIX@channelname <channel> <name>",
-		"Alias": "-",
-		"Description": "Changes the channel name. (Emojis allowed)\n(Notes: Voice channels cannot be mentioned and if it has a space in the name use the id to rename it.)",
-		"HasPermission": false
-	},
-	{
-		"Category": "Utilities",
-		"Command": "ChannelCategoryName",
-		"Usage": "@PREFIX@channelcategoryname <channel category> <name>",
-		"Alias": "categoryname",
-		"Description": "Changes the channel category name. (Emojis allowed)",
-		"HasPermission": false
-	},
-	{
-		"Category": "Utilities",
-		"Command": "ServerInfo",
-		"Usage": "@PREFIX@serverinfo",
-		"Alias": "si",
-		"Description": "Server details",
-		"HasPermission": false
-	},
-	{
-		"Category": "Utilities",
-		"Command": "AfkMessage",
-		"Usage": "@PREFIX@afkmessage <message>",
-		"Alias": "-",
-		"Description": "Kurumi sends the set message when you get mentioned. Use ``@PREFIX@afkmessage remove`` to remove it.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Game",
-		"Command": "Roll",
-		"Usage": "@PREFIX@roll [number]",
-		"Alias": "-",
-		"Description": "Rolls a number between 0 and the given number (if no number is given, it will be between 0 and 10)",
-		"HasPermission": true
-	},
-	{
-		"Category": "Moderation",
-		"Command": "Warn",
-		"Usage": "@PREFIX@warn <user>",
-		"Alias": "-",
-		"Description": "Gives a warning to the user.\nIf the user has more warnings then the maximum warnings on this server the user will be baned/kicked. (The punishment and the maximum warnings can be set with the ``@PREFIX@modsettings`` command!)",
-		"HasPermission": false
-	},
-	{
-		"Category": "Moderation",
-		"Command": "RemoveWarning",
-		"Usage": "@PREFIX@removewarning <user>",
-		"Alias": "rwarning",
-		"Description": "Removes a warning from the user.",
-		"HasPermission": false
-	},
-	{
-		"Category": "Moderation",
-		"Command": "Warnings",
-		"Usage": "@PREFIX@warnings <user>",
-		"Alias": "-",
-		"Description": "Gets the number of warnings the user has.",
-		"HasPermission": false
-	},
-	{
-		"Category": "Moderation",
-		"Command": "ModSettings",
-		"Usage": "@PREFIX@modsettings <1> [2] [3]",
-		"Alias": "-",
-		"Description": "Set max warnings: ``@PREFIX@modsettings maxwarnings <number>``\nSet punishment for using blacklisted word: ``@PREFIX@modsettings punishmentforword <warning/delete>``\nSet punishment for too many warnings: ``@PREFIX@modsettings punishmentforwarning <kick/ban>``\nChange blacklisted words: ``@PREFIX@modsettings blacklistedwords <add/remove> <word>``",
-		"HasPermission": false
-	},
-	{
-		"Category": "Character",
-		"Command": "CreateCharacter",
-		"Usage": "@PREFIX@createcharacter <name>",
-		"Alias": "-",
-		"Description": "Creates a character which you can use to fight with your friends.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Character",
-		"Command": "DeleteCharacter",
-		"Usage": "@PREFIX@deletecharacter <name>",
-		"Alias": "-",
-		"Description": "Deletes your character.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Character",
-		"Command": "Shop",
-		"Usage": "@PREFIX@shop [page]",
-		"Alias": "-",
-		"Description": "Lists the items you can buy to your character.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Character",
-		"Command": "Buy",
-		"Usage": "@PREFIX@buy <item>",
-		"Alias": "-",
-		"Description": "Buys the item from the shop.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Character",
-		"Command": "Sell",
-		"Usage": "@PREFIX@Sell <item> [(n)]",
-		"Alias": "-",
-		"Description": "Sells the item from your character's inventory and you get 90% of the price back.\n**n** is the number used to pick an item if there are more then one of the same type, it has to be in brackets." ,
-		"HasPermission": true
-	},
-	{
-		"Category": "Character",
-		"Command": "Inventory",
-		"Usage": "@PREFIX@inventory",
-		"Alias": "-",
-		"Description": "Lists the items in your character's inventory.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Character",
-		"Command": "CharacterInfo",
-		"Usage": "@PREFIX@characterinfo [user]",
-		"Alias": "ci",
-		"Description": "Kurumi sends information about the user's character. (If no one is mentioned Kurumi will send your character's informations and a more detaild one in DM)",
-		"HasPermission": true
-	},
-	{
-		"Category": "Character",
-		"Command": "Equip",
-		"Usage": "@PREFIX@equip <item> [(n)]",
-		"Alias": "-",
-		"Description": "Equips the item onto your character. **n** is the number used to pick an item if there are more then one of the same type, it has to be in brackets.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Character",
-		"Command": "SetProfilePicture",
-		"Usage": "@PREFIX@setprofilepicture <image url>",
-		"Alias": "-",
-		"Description": "Sets the image as your character's profile picture.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Character",
-		"Command": "ItemInfo",
-		"Usage": "@PREFIX@iteminfo <item>",
-		"Alias": "-",
-		"Description": "",
-		"HasPermission": true
-	},
-	{
-		"Category": "Character",
-		"Command": "Skill",
-		"Usage": "@PREFIX@skill <slot> <skill>",
-		"Alias": "-",
-		"Description": "Sets the skill to the slot.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Misc",
-		"Command": "Jobs",
-		"Usage": "@PREFIX@jobs [job]",
-		"Alias": "-",
-		"Description": "List of things I need help in. (Leave 'job' empty to see all the available jobs).\n(Don't expect payment)",
-		"HasPermission": true
-	},
-	{
-		"Category": "Utilities",
-		"Command": "RemindMe",
-		"Usage": "@PREFIX@remindme <text> @/in <time>",
-		"Alias": "-",
-		"Description": "Kurumi sends you the text in DM at the set time.\nSetting the time:\n•Using '@': **text** @ time (in UTC+1)\n•Using 'in': **text** in 00:00:00 (hh:mm:ss)",
-		"HasPermission": true
-	},
-	{
-		"Category": "Leveling",
-		"Command": "Leaderboard",
-		"Usage": "@PREFIX@leaderboard [global/server] [page]",
-		"Alias": "-",
-		"Description": "",
-		"HasPermission": true
-	},
-	{
-		"Category": "Leveling",
-		"Command": "ClearLeaderboard",
-		"Usage": "@PREFIX@clearleaderboard",
-		"Alias": "resetleaderboard",
-		"Description": "Clears the server leaderboard. Only users with ``admin`` permission can use this command!",
-		"HasPermission": true
-	},
-	{
-		"Category": "Game",
-		"Command": "Lobby",
-		"Usage": "@PREFIX@lobby",
-		"Alias": "-",
-		"Description": "\n**Create:** Creates a lobby. Usage: ``@PREFIX@lobby create [game]``\n**Invite:** Invites a player to the lobby (only lobby owner can use it). Usage: ``@PREFIX@lobby invite <user>``\n**Delete:** Deletes the lobby (only lobby owner can use it). Usage: ``@PREFIX@lobby delete``\n**Game:** Select a new game. (if the game is empty the list of the games will be sent.). Usage: ``@PREFIX@lobby game [game]``\n**Leave:** Leaves the lobby. Usage: ``@PREFIX@lobby leave``\n**Start:** Starts the lobby. Usage: ``@PREFIX@lobby start``\n**Join/accept:** Accepts the lobby invite. Usage: ``@PREFIX@lobby accept``\n**Decline:** Declines the lobby invite. Usage: ``@PREFIX@lobby decline``\n**Settings:** Change a game setting. Usage: ``@PREFIX@lobby settings <name>=<value>``",
-		"HasPermission": true
-	},
-	{
-		"Category": "Utilities",
-		"Command": "UserId",
-		"Usage": "@PREFIX@userid <user>",
-		"Alias": "-",
-		"Description": "Send the user's discord id.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Utilities",
-		"Command": "ServerId",
-		"Usage": "@PREFIX@serverid",
-		"Alias": "-",
-		"Description": "Send the server's discord id.",
-		"HasPermission": true
-	},
-	{
-		"Category": "Utilities",
-		"Command": "RoleId",
-		"Usage": "@PREFIX@roleid <role>",
-		"Alias": "-",
-		"Description": "Send the role's discord id.",
-		"HasPermission": true
-	},
-  {
-    "Category": "Utilities",
-    "Command": "ServerIcon",
-    "Usage": "@PREFIX@servericon",
-    "Alias": "-",
-    "Description": "Send the server's icon.",
-    "HasPermission": true
-  },
-  {
-    "Category": "Leveling",
-    "Command": "PruneLeaderboard",
-    "Usage": "@PREFIX@pruneleaderboard",
-    "Alias": "-",
-    "Description": "Remove users who left the guild.",
-    "HasPermission": true
-  },
+      "Category": "Misc",
+      "Command": "Help",
+      "Usage": "@PREFIX@help [command/category]",
+      "Alias": "h",
+      "Description": "Lists all Kurumi commands/categories.",
+      "HasPermission": false
+    },
+    {
+      "Category": "Music",
+      "Command": "Play",
+      "Usage": "@PREFIX@play <YT url / SoundCloud url / search>",
+      "Alias": "-",
+      "Description": "Plays music from Youtube/SoundCloud.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Music",
+      "Command": "AddQueue",
+      "Usage": "@PREFIX@addqueue <YT url / SoundCloud url / search>",
+      "Alias": "aq",
+      "Description": "Adds a music to the queue.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Music",
+      "Command": "RemoveQueue",
+      "Usage": "@PREFIX@removequeue <Url / Id>",
+      "Alias": "rq",
+      "Description": "Removes a music from the queue.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Music",
+      "Command": "ListQueue",
+      "Usage": "@PREFIX@listqueue",
+      "Alias": "lq",
+      "Description": "Lists all items in the queue.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Music",
+      "Command": "Leave",
+      "Usage": "@PREFIX@leave",
+      "Alias": "-",
+      "Description": "Kurumi leaves the voice channel and clears the queue.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Music",
+      "Command": "Skip",
+      "Usage": "@PREFIX@skip",
+      "Alias": "-",
+      "Description": "Plays the next music in the queue. If there are more then 3 useres in the voice channel a vote will be started.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Music",
+      "Command": "ForceSkip",
+      "Usage": "@PREFIX@forceskip",
+      "Alias": "fskip",
+      "Description": "Plays the next music in the queue.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Music",
+      "Command": "ListenMoe",
+      "Usage": "@PREFIX@listenmoe",
+      "Alias": "lm",
+      "Description": "Plays music from Listen.moe.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Music",
+      "Command": "Volume",
+      "Usage": "@PREFIX@volume <volume>",
+      "Alias": "-",
+      "Description": "Sets the volume of the music.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Music",
+      "Command": "Pause",
+      "Usage": "@PREFIX@pause",
+      "Alias": "resume",
+      "Description": "Pauses the music.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Misc",
+      "Command": "Say",
+      "Usage": "@PREFIX@say <text>",
+      "Alias": "-",
+      "Description": "Kurumi says the given text. You can set the title by using ``{title=<title text>}`` at the end.",
+      "HasPermission": true
+    },
+    {
+      "Category": "NSFW",
+      "Command": "Danbooru",
+      "Usage": "@PREFIX@danbooru [tag(s)]",
+      "Alias": "-",
+      "Description": "Sends nsfw images using the Danbooru API.",
+      "HasPermission": true
+    },
+    {
+      "Category": "NSFW",
+      "Command": "Boobs",
+      "Usage": "@PREFIX@boobs",
+      "Alias": "-",
+      "Description": "Describe boobs with images.",
+      "HasPermission": true
+    },
+    {
+      "Category": "NSFW",
+      "Command": "E621",
+      "Usage": "@PREFIX@E621 [tag(s)]",
+      "Alias": "-",
+      "Description": "Sends nsfw images using the E621 API.",
+      "HasPermission": true
+    },
+    {
+      "Category": "NSFW",
+      "Command": "Gelbooru",
+      "Usage": "@PREFIX@gelbooru [tag(s)]",
+      "Alias": "-",
+      "Description": "Sends nsfw images using the Gelbooru API.",
+      "HasPermission": true
+    },
+    {
+      "Category": "NSFW",
+      "Command": "Konachan",
+      "Usage": "@PREFIX@konachan [tag(s)]",
+      "Alias": "-",
+      "Description": "Sends nsfw images using the Konachan API.",
+      "HasPermission": true
+    },
+    {
+      "Category": "NSFW",
+      "Command": "Randomhentai",
+      "Usage": "@PREFIX@randomhentai [tag(s)]",
+      "Alias": "-",
+      "Description": "Sends nsfw images using a random API.",
+      "HasPermission": true
+    },
+    {
+      "Category": "NSFW",
+      "Command": "Rule34",
+      "Usage": "@PREFIX@rule34 [tag(s)]",
+      "Alias": "-",
+      "Description": "Sends nsfw images using the Rule34 API.",
+      "HasPermission": true
+    },
+    {
+      "Category": "NSFW",
+      "Command": "Yandere",
+      "Usage": "@PREFIX@yandere [tag(s)]",
+      "Alias": "-",
+      "Description": "Sends nsfw images using the Yandere API.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Leveling",
+      "Command": "UserInfo",
+      "Usage": "@PREFIX@userinfo [user]",
+      "Alias": "ui, profile, userprofile, rank",
+      "Description": "Sets the volume of the music.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Utilities",
+      "Command": "Avatar",
+      "Usage": "@PREFIX@avatar [user]",
+      "Alias": "-",
+      "Description": "Send the user's avatar.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Misc",
+      "Command": "Ping",
+      "Usage": "@PREFIX@ping",
+      "Alias": "-",
+      "Description": "Pong",
+      "HasPermission": false
+    },
+    {
+      "Category": "Misc",
+      "Command": "Support",
+      "Usage": "@PREFIX@support",
+      "Alias": "-",
+      "Description": "Invite link to the Kurumi support server. (Sends it in DM)",
+      "HasPermission": false
+    },
+    {
+      "Category": "Misc",
+      "Command": "Donate",
+      "Usage": "@PREFIX@donate",
+      "Alias": "-",
+      "Description": "Send patreon link.",
+      "HasPermission": false
+    },
+    {
+      "Category": "Misc",
+      "Command": "Invite",
+      "Usage": "@PREFIX@invite",
+      "Alias": "-",
+      "Description": "Sends bot invite link.",
+      "HasPermission": false
+    },
+    {
+      "Category": "Misc",
+      "Command": "Vote",
+      "Usage": "@PREFIX@vote",
+      "Alias": "-",
+      "Description": "Sends the discordbots.org link.",
+      "HasPermission": false
+    },
+    {
+      "Category": "Utilities",
+      "Command": "Emoji",
+      "Usage": "@PREFIX@emoji <emoji>",
+      "Alias": "-",
+      "Description": "Sends the image of the emoji.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Utilities",
+      "Command": "Nick",
+      "Usage": "@PREFIX@nick <nickname>",
+      "Alias": "-",
+      "Description": "Sets your nickname.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Image",
+      "Command": "Hug",
+      "Usage": "@PREFIX@hug [user]",
+      "Alias": "-",
+      "Description": "",
+      "HasPermission": true
+    },
+    {
+      "Category": "Image",
+      "Command": "Kick",
+      "Usage": "@PREFIX@kick [user]",
+      "Alias": "-",
+      "Description": "",
+      "HasPermission": true
+    },
+    {
+      "Category": "Image",
+      "Command": "Kiss",
+      "Usage": "@PREFIX@kiss [user]",
+      "Alias": "-",
+      "Description": "",
+      "HasPermission": true
+    },
+    {
+      "Category": "Image",
+      "Command": "Kurumi",
+      "Usage": "@PREFIX@kurumi",
+      "Alias": "-",
+      "Description": "",
+      "HasPermission": true
+    },
+    {
+      "Category": "Image",
+      "Command": "Pat",
+      "Usage": "@PREFIX@pat [user]",
+      "Alias": "-",
+      "Description": "",
+      "HasPermission": true
+    },
+    {
+      "Category": "Image",
+      "Command": "Slap",
+      "Usage": "@PREFIX@slap [user]",
+      "Alias": "-",
+      "Description": "",
+      "HasPermission": true
+    },
+    {
+      "Category": "Image",
+      "Command": "Lick",
+      "Usage": "@PREFIX@lick [user]",
+      "Alias": "-",
+      "Description": "",
+      "HasPermission": true
+    },
+    {
+      "Category": "Image",
+      "Command": "Stare",
+      "Usage": "@PREFIX@stare [user]",
+      "Alias": "-",
+      "Description": "",
+      "HasPermission": true
+    },
+    {
+      "Category": "Image",
+      "Command": "Triggered",
+      "Usage": "@PREFIX@triggered",
+      "Alias": "-",
+      "Description": "",
+      "HasPermission": true
+    },
+    {
+      "Category": "Image",
+      "Command": "Cry",
+      "Usage": "@PREFIX@cry [user]",
+      "Alias": "-",
+      "Description": "",
+      "HasPermission": true
+    },
+    {
+      "Category": "Image",
+      "Command": "Poke",
+      "Usage": "@PREFIX@poke [user]",
+      "Alias": "-",
+      "Description": "",
+      "HasPermission": true
+    },
+    {
+      "Category": "Misc",
+      "Command": "Sayc",
+      "Usage": "@PREFIX@sayc <message>",
+      "Alias": "sayd",
+      "Description": "Sends the given text and deletes the user's message. (For moderators: You can check who sent the message by using ``@PREIFX@wst <message id>``)",
+      "HasPermission": true
+    },
+    {
+      "Category": "Moderation",
+      "Command": "WhoSaidThis",
+      "Usage": "@PREFIX@whosaidthis <message id>",
+      "Alias": "wst",
+      "Description": "Sends who sent the message with ``sayc`` command. (Requires ``ManageMessages`` permission)",
+      "HasPermission": false
+    },
+    {
+      "Category": "Colors",
+      "Command": "Color",
+      "Usage": "@PREFIX@color [color role]",
+      "Alias": "-",
+      "Description": "Gives the user the selected color role. (If no role is given, Kurumi will list all color roles)",
+      "HasPermission": true
+    },
+    {
+      "Category": "Colors",
+      "Command": "CreateRoles",
+      "Usage": "@PREFIX@createroles",
+      "Alias": "-",
+      "Description": "Creates the default roles. (Only the guild owner can run this command)",
+      "HasPermission": false
+    },
+    {
+      "Category": "Colors",
+      "Command": "AddColorRole",
+      "Usage": "@PREFIX@addcolorrole <role name> <color (in hex)>",
+      "Alias": "-",
+      "Description": "Creates (or sets, if role already exists) a role as color role.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Colors",
+      "Command": "RemoveColorRole",
+      "Usage": "@PREFIX@removecolorrole <role name>",
+      "Alias": "-",
+      "Description": "Removes a role from the color role list (Doesn't delete the role).",
+      "HasPermission": true
+    },
+    {
+      "Category": "Game",
+      "Command": "Surrender",
+      "Usage": "@PREFIX@surrender",
+      "Alias": "-",
+      "Description": "Surrender the game.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Utilities",
+      "Command": "Language",
+      "Usage": "@PREFIX@language [language code]",
+      "Alias": "-",
+      "Description": "Sets the bot language on this server. (If language code is empty, it will send all available languages.)\nThe user must have ``ManageGuild`` permission to change language.",
+      "HasPermission": false
+    },
+    {
+      "Category": "Utilities",
+      "Command": "Prefix",
+      "Usage": "@PREFIX@prefix [new prefix]",
+      "Alias": "-",
+      "Description": "Sets the prefix for this server. (If prefix is empty, it will send the current prefix.)\nThe user must have ``ManageGuild`` permission to change the prefix.",
+      "HasPermission": false
+    },
+    {
+      "Category": "Utilities",
+      "Command": "Ranking",
+      "Usage": "@PREFIX@ranking [increment or state]",
+      "Alias": "-",
+      "Description": "Ranking settings, increment must be a number between **5** and **400** and it sets the difficulty of leveling up, state must be **true** or **false** and it sets if **server** ranking should be enabled or not.\nIf left empty, Kurumi will send the current settings.\nThe user must have ``ManageGuild`` permission to change or view the settings.",
+      "HasPermission": false
+    },
+    {
+      "Category": "Utilities",
+      "Command": "WelcomeChannel",
+      "Usage": "@PREFIX@welcomechannel [channel id/name/mention]",
+      "Alias": "-",
+      "Description": "Sets a channel as welcome channel and Kurumi will welcome the users with one of the set ``welcome messages`` in the channel. Use ``remove`` to remove the channel (Doesn't delete the channel!), leave it empty to get the current welcome channel.\nThe user must have ``ManageGuild`` permission to change or view the settings!",
+      "HasPermission": false
+    },
+    {
+      "Category": "Utilities",
+      "Command": "WelcomeMessage",
+      "Usage": "@PREFIX@welcomemessage <add/remove/list> <message/messageid/page>",
+      "Alias": "-",
+      "Description": "\n**Add:** Adds the message to the list of welcome messages.\n**Remove:** Remove the message at the given id from the list of welcome messages.\n**List:**Kurumi sends the welcome messages at the given page (If left empty, Kurumi will send page **1**).\nThe user must have ``ManageGuild`` permission to change or view the settings!",
+      "HasPermission": false
+    },
+    {
+      "Category": "Utilities",
+      "Command": "Permission",
+      "Usage": "@PREFIX@permission <add/remove/list/reset/copy> <role/role1;role2> [permission]",
+      "Alias": "-",
+      "Description": "\"Permission\" is the same as the command, The role must be: Id, name or mention, if the role name contains a ``space``, it **can't** be used!\n**Add:** Adds a **Kurumi** permission to a **discord** role. Usage: ``@PREFIX@permission add <role> <permission>``\n**Remove:** Removes a **Kurumi** permission from a **discord** role. Usage: ``@PREFIX@permission remove <role> <permission>``\n**List:** Lists all permissions the role has. Usage: ``@PREFIX@permission list <role>``\n**Reset:** Resets the permissions for a role. Usage: ``@PREFIX@permission reset <role>``\n**Copy**: Copies the permissions of ``Role1`` to ``Role2``. Usage: ``@PREFIX@permission copy <Role1>;<Role2>``\nThe user must have ``ManageGuild`` permission to change or view the permissions!",
+      "HasPermission": false
+    },
+    {
+      "Category": "Utilities",
+      "Command": "LevelReward",
+      "Usage": "@PREFIX@levelreward <list/add/remove> <level> <role>",
+      "Alias": "-",
+      "Description": "Sets a reward for the users reaching the set level.\n**List:** Lists all set rewards. Usage ``@PREFIX@levelreward list``\n**Add:** Adds role to a level. Usage: ``@PREFIX@levelreward add <level> <role>``\n**Remove:** Removes the reward at a level. Usage: ``@PREFIX@levelreward remove <level>``\nThe user must have ``ManageGuild`` permission to change or view the rewards!",
+      "HasPermission": false
+    },
+    {
+      "Category": "Music",
+      "Command": "Repeat",
+      "Usage": "@PREFIX@repeat",
+      "Alias": "-",
+      "Description": "Kurumi will repeat the currently playing song. (Use the command again to stop repeating.)",
+      "HasPermission": true
+    },
+    {
+      "Category": "Music",
+      "Command": "NowPlaying",
+      "Usage": "@PREFIX@nowplaying",
+      "Alias": "-",
+      "Description": "Sends the title of the currently playing song.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Music",
+      "Command": "Shuffle",
+      "Usage": "@PREFIX@shuffle",
+      "Alias": "-",
+      "Description": "Kurumi will play the songs in a random order from the queue. (Use the command again to stop.)",
+      "HasPermission": true
+    },
+    {
+      "Category": "Misc",
+      "Command": "Lenny",
+      "Usage": "@PREFIX@lenny",
+      "Alias": "-",
+      "Description": "Lenny face",
+      "HasPermission": false
+    },
+    {
+      "Category": "Misc",
+      "Command": "TableFlip",
+      "Usage": "@PREFIX@tableflip",
+      "Alias": "-",
+      "Description": "(╯°□°）╯︵ ┻━┻",
+      "HasPermission": false
+    },
+    {
+      "Category": "Misc",
+      "Command": "DoubleFlip",
+      "Usage": "@PREFIX@doubleflip",
+      "Alias": "-",
+      "Description": "┻━┻彡 ヽ(ಠДಠ)ノ彡┻━┻",
+      "HasPermission": false
+    },
+    {
+      "Category": "Game",
+      "Command": "Choose",
+      "Usage": "@PREFIX@choose <options>",
+      "Alias": "-",
+      "Description": "Kurumi chooses one of the options. (Options must be separated with \"**;**\"!)",
+      "HasPermission": true
+    },
+    {
+      "Category": "Game",
+      "Command": "Choose",
+      "Usage": "@PREFIX@choose <options>",
+      "Alias": "-",
+      "Description": "Kurumi chooses one of the options. (Options must be separated with \"**;**\"!)",
+      "HasPermission": true
+    },
+    {
+      "Category": "Misc",
+      "Command": "BotInfo",
+      "Usage": "@PREFIX@botinfo",
+      "Alias": "bi",
+      "Description": "-",
+      "HasPermission": false
+    },
+    {
+      "Category": "Search",
+      "Command": "Anime",
+      "Usage": "@PREFIX@anime <anime title>",
+      "Alias": "-",
+      "Description": "Sends details about the anime.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Search",
+      "Command": "Manga",
+      "Usage": "@PREFIX@manga <manga title>",
+      "Alias": "-",
+      "Description": "Sends details about the manga.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Search",
+      "Command": "Character",
+      "Usage": "@PREFIX@character <character name>",
+      "Alias": "-",
+      "Description": "Sends details about the character.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Search",
+      "Command": "UrbanDictionary",
+      "Usage": "@PREFIX@urbandictionary <word>",
+      "Alias": "ud, udict",
+      "Description": "Gets the definition of the word from [urbandictionary.com](https://urbandictionary.com/)",
+      "HasPermission": true
+    },
+    {
+      "Category": "Game",
+      "Command": "Osu",
+      "Usage": "@PREFIX@osu <player>",
+      "Alias": "-",
+      "Description": "Sends the player's osu profile.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Game",
+      "Command": "RussianRoulette",
+      "Usage": "@PREFIX@russianroulette <bet>",
+      "Alias": "rr",
+      "Description": "Puts 1 bullet in a revolver and spins the cylinder. If you survive you win 1,5x your bet, if you lose, you lose 12x the bet!",
+      "HasPermission": true
+    },
+    {
+      "Category": "Moderation",
+      "Command": "Purge",
+      "Usage": "@PREFIX@purge <number of messages>",
+      "Alias": "clear",
+      "Description": "Deletes messages.",
+      "HasPermission": false
+    },
+    {
+      "Category": "Moderation",
+      "Command": "KickUser",
+      "Usage": "@PREFIX@kickuser <user> [reason]",
+      "Alias": "-",
+      "Description": "Kicks the user.",
+      "HasPermission": false
+    },
+    {
+      "Category": "Moderation",
+      "Command": "Ban",
+      "Usage": "@PREFIX@ban <user> [reason]",
+      "Alias": "-",
+      "Description": "Bans the user.",
+      "HasPermission": false
+    },
+    {
+      "Category": "Moderation",
+      "Command": "PruneBan",
+      "Usage": "@PREFIX@pruneban <user> <days> [reason]",
+      "Alias": "-",
+      "Description": "Bans the user and deletes the messages.",
+      "HasPermission": false
+    },
+    {
+      "Category": "Utilities",
+      "Command": "ChannelName",
+      "Usage": "@PREFIX@channelname <channel> <name>",
+      "Alias": "-",
+      "Description": "Changes the channel name. (Emojis allowed)\n(Notes: Voice channels cannot be mentioned and if it has a space in the name use the id to rename it.)",
+      "HasPermission": false
+    },
+    {
+      "Category": "Utilities",
+      "Command": "ChannelCategoryName",
+      "Usage": "@PREFIX@channelcategoryname <channel category> <name>",
+      "Alias": "categoryname",
+      "Description": "Changes the channel category name. (Emojis allowed)",
+      "HasPermission": false
+    },
+    {
+      "Category": "Utilities",
+      "Command": "ServerInfo",
+      "Usage": "@PREFIX@serverinfo",
+      "Alias": "si",
+      "Description": "Server details",
+      "HasPermission": false
+    },
+    {
+      "Category": "Utilities",
+      "Command": "AfkMessage",
+      "Usage": "@PREFIX@afkmessage <message>",
+      "Alias": "-",
+      "Description": "Kurumi sends the set message when you get mentioned. Use ``@PREFIX@afkmessage remove`` to remove it.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Game",
+      "Command": "Roll",
+      "Usage": "@PREFIX@roll [number]",
+      "Alias": "-",
+      "Description": "Rolls a number between 0 and the given number (if no number is given, it will be between 0 and 10)",
+      "HasPermission": true
+    },
+    {
+      "Category": "Moderation",
+      "Command": "Warn",
+      "Usage": "@PREFIX@warn <user>",
+      "Alias": "-",
+      "Description": "Gives a warning to the user.\nIf the user has more warnings then the maximum warnings on this server the user will be baned/kicked. (The punishment and the maximum warnings can be set with the ``@PREFIX@modsettings`` command!)",
+      "HasPermission": false
+    },
+    {
+      "Category": "Moderation",
+      "Command": "RemoveWarning",
+      "Usage": "@PREFIX@removewarning <user>",
+      "Alias": "rwarning",
+      "Description": "Removes a warning from the user.",
+      "HasPermission": false
+    },
+    {
+      "Category": "Moderation",
+      "Command": "Warnings",
+      "Usage": "@PREFIX@warnings <user>",
+      "Alias": "-",
+      "Description": "Gets the number of warnings the user has.",
+      "HasPermission": false
+    },
+    {
+      "Category": "Moderation",
+      "Command": "ModSettings",
+      "Usage": "@PREFIX@modsettings <1> [2] [3]",
+      "Alias": "-",
+      "Description": "Set max warnings: ``@PREFIX@modsettings maxwarnings <number>``\nSet punishment for using blacklisted word: ``@PREFIX@modsettings punishmentforword <warning/delete>``\nSet punishment for too many warnings: ``@PREFIX@modsettings punishmentforwarning <kick/ban>``\nChange blacklisted words: ``@PREFIX@modsettings blacklistedwords <add/remove> <word>``",
+      "HasPermission": false
+    },
+    {
+      "Category": "Character",
+      "Command": "CreateCharacter",
+      "Usage": "@PREFIX@createcharacter <name>",
+      "Alias": "-",
+      "Description": "Creates a character which you can use to fight with your friends.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Character",
+      "Command": "DeleteCharacter",
+      "Usage": "@PREFIX@deletecharacter <name>",
+      "Alias": "-",
+      "Description": "Deletes your character.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Character",
+      "Command": "Shop",
+      "Usage": "@PREFIX@shop [page]",
+      "Alias": "-",
+      "Description": "Lists the items you can buy to your character.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Character",
+      "Command": "Buy",
+      "Usage": "@PREFIX@buy <item>",
+      "Alias": "-",
+      "Description": "Buys the item from the shop.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Character",
+      "Command": "Sell",
+      "Usage": "@PREFIX@Sell <item> [(n)]",
+      "Alias": "-",
+      "Description": "Sells the item from your character's inventory and you get 90% of the price back.\n**n** is the number used to pick an item if there are more then one of the same type, it has to be in brackets.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Character",
+      "Command": "Inventory",
+      "Usage": "@PREFIX@inventory",
+      "Alias": "-",
+      "Description": "Lists the items in your character's inventory.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Character",
+      "Command": "CharacterInfo",
+      "Usage": "@PREFIX@characterinfo [user]",
+      "Alias": "ci",
+      "Description": "Kurumi sends information about the user's character. (If no one is mentioned Kurumi will send your character's informations and a more detaild one in DM)",
+      "HasPermission": true
+    },
+    {
+      "Category": "Character",
+      "Command": "Equip",
+      "Usage": "@PREFIX@equip <item> [(n)]",
+      "Alias": "-",
+      "Description": "Equips the item onto your character. **n** is the number used to pick an item if there are more then one of the same type, it has to be in brackets.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Character",
+      "Command": "SetProfilePicture",
+      "Usage": "@PREFIX@setprofilepicture <image url>",
+      "Alias": "-",
+      "Description": "Sets the image as your character's profile picture.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Character",
+      "Command": "ItemInfo",
+      "Usage": "@PREFIX@iteminfo <item>",
+      "Alias": "-",
+      "Description": "",
+      "HasPermission": true
+    },
+    {
+      "Category": "Character",
+      "Command": "Skill",
+      "Usage": "@PREFIX@skill <slot> <skill>",
+      "Alias": "-",
+      "Description": "Sets the skill to the slot.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Misc",
+      "Command": "Jobs",
+      "Usage": "@PREFIX@jobs [job]",
+      "Alias": "-",
+      "Description": "List of things I need help in. (Leave 'job' empty to see all the available jobs).\n(Don't expect payment)",
+      "HasPermission": true
+    },
+    {
+      "Category": "Utilities",
+      "Command": "RemindMe",
+      "Usage": "@PREFIX@remindme <text> @/in <time>",
+      "Alias": "-",
+      "Description": "Kurumi sends you the text in DM at the set time.\nSetting the time:\n•Using '@': **text** @ time (in UTC+1)\n•Using 'in': **text** in 00:00:00 (hh:mm:ss)",
+      "HasPermission": true
+    },
+    {
+      "Category": "Leveling",
+      "Command": "Leaderboard",
+      "Usage": "@PREFIX@leaderboard [global/server] [page]",
+      "Alias": "-",
+      "Description": "",
+      "HasPermission": true
+    },
+    {
+      "Category": "Leveling",
+      "Command": "ResetLeaderboard",
+      "Usage": "@PREFIX@resetleaderboard [user]",
+      "Alias": "clearleaderboard",
+      "Description": "Resets the server leaderboard or removes ''user'' from the server leaderboard. Only users with ``Administrator`` permissions can use this command!",
+      "HasPermission": false
+    },
+    {
+      "Category": "Game",
+      "Command": "Lobby",
+      "Usage": "@PREFIX@lobby",
+      "Alias": "-",
+      "Description": "\n**Create:** Creates a lobby. Usage: ``@PREFIX@lobby create [game]``\n**Invite:** Invites a player to the lobby (only lobby owner can use it). Usage: ``@PREFIX@lobby invite <user>``\n**Delete:** Deletes the lobby (only lobby owner can use it). Usage: ``@PREFIX@lobby delete``\n**Game:** Select a new game. (if the game is empty the list of the games will be sent.). Usage: ``@PREFIX@lobby game [game]``\n**Leave:** Leaves the lobby. Usage: ``@PREFIX@lobby leave``\n**Start:** Starts the lobby. Usage: ``@PREFIX@lobby start``\n**Join/accept:** Accepts the lobby invite. Usage: ``@PREFIX@lobby accept``\n**Decline:** Declines the lobby invite. Usage: ``@PREFIX@lobby decline``\n**Settings:** Change a game setting. Usage: ``@PREFIX@lobby settings <name>=<value>``",
+      "HasPermission": true
+    },
+    {
+      "Category": "Utilities",
+      "Command": "UserId",
+      "Usage": "@PREFIX@userid <user>",
+      "Alias": "-",
+      "Description": "Send the user's discord id.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Utilities",
+      "Command": "ServerId",
+      "Usage": "@PREFIX@serverid",
+      "Alias": "-",
+      "Description": "Send the server's discord id.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Utilities",
+      "Command": "RoleId",
+      "Usage": "@PREFIX@roleid <role>",
+      "Alias": "-",
+      "Description": "Send the role's discord id.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Utilities",
+      "Command": "ServerIcon",
+      "Usage": "@PREFIX@servericon",
+      "Alias": "-",
+      "Description": "Send the server's icon.",
+      "HasPermission": true
+    },
+    {
+      "Category": "Leveling",
+      "Command": "PruneLeaderboard",
+      "Usage": "@PREFIX@pruneleaderboard",
+      "Alias": "-",
+      "Description": "Remove users from the leaderboard who left the guild. (Requires ``Administrator`` permissions)",
+      "HasPermission": false
+    }
 ]

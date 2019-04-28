@@ -11,6 +11,7 @@ using Kurumi.Modules.Games.Duel;
 using Kurumi.Modules.Games.Quiz;
 using Kurumi.Modules.Moderation;
 using Kurumi.Modules.Music;
+using Kurumi.Modules.Utility;
 using Kurumi.Services.Database.Databases;
 using Kurumi.Services.Leveling;
 using Kurumi.Services.Permission;
@@ -62,7 +63,7 @@ namespace Kurumi.Services
             string prefix = DEFAULT_PREFIX;
             if (Context.Channel.GetType().ToString() == "Discord.WebSocket.SocketTextChannel") //There has to be a better way to check this
             {
-                prefix = GuildConfigDatabase.GetOrFake(Context.Guild.Id).Prefix;
+                prefix = GuildDatabase.GetOrFake(Context.Guild.Id).Prefix;
                 await ExpManager.AddExp(Context); //Only give EXP on servers
             }
 
@@ -232,6 +233,8 @@ namespace Kurumi.Services
                 }
             }
             #endregion Games
+
+            await AfkMessage.SendMessage(context);
         }
         private bool HasCustomAttribute(Type attribute, string command)
         {

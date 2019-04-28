@@ -1,19 +1,37 @@
 ﻿using Kurumi.Common;
 using Kurumi.Common.Extensions;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Kurumi.Modules.Games.Duel.Database
+namespace Kurumi.Services.Database.Models
 {
-    public class CharacterEquipment
+    public class Character
     {
-        [JsonIgnore]
+        public ObjectId Id { get; set; }
+        #region Data
+        public string Name { get; set; }
+        public string ProfilePicture { get; set; }
+        public int Exp { get; set; }
+        public bool Ai { get; set; }
+        public ulong Owner { get; set; }
+
+        public int GetLevel(Character enemy = null)
+        {
+            if (Ai && enemy != null)
+                return enemy.GetLevel();
+
+            return (int)(1 + Math.Sqrt(1 + 8 * Exp / 100)) / 2;
+        }
+        #endregion Data
+
+        #region Equipment
+        [BsonIgnore]
         public PlayerItem BaseValues { get; set; }
-        [JsonIgnore]
-        public CharacterData CharData { get; set; }
 
         public PlayerItem Weapon { get; set; }
         public PlayerItem Boots { get; set; }
@@ -37,7 +55,7 @@ namespace Kurumi.Modules.Games.Duel.Database
             {
                 var Inventory = new List<PlayerItem>(this.Inventory);
                 string s = string.Empty;
-                for (; Inventory.Count != 0; )
+                for (; Inventory.Count != 0;)
                 {
                     var item = Inventory[0];
                     if (item.StackLimit > 1)
@@ -68,7 +86,7 @@ namespace Kurumi.Modules.Games.Duel.Database
         {
             List<PlayerItem> BrokenItems = new List<PlayerItem>();
 
-            if (CharData.Ai)
+            if (Ai)
                 return BrokenItems;
 
             if (Weapon != null && WeaponDamage > 0)
@@ -146,16 +164,16 @@ namespace Kurumi.Modules.Games.Duel.Database
 
 
         public int TotalDamage(Character enemy = null)
-        { 
-            return (int)((BaseValues?.Damage ?? 0) + 
-                        (Weapon?.Damage ?? 0) * DurabilityModifier(Weapon) + 
-                        (Boots?.Damage ?? 0) * DurabilityModifier(Boots) + 
-                        (Hat?.Damage ?? 0) * DurabilityModifier(Hat) + 
-                        (Shirt?.Damage ?? 0) * DurabilityModifier(Shirt) + 
+        {
+            return (int)((BaseValues?.Damage ?? 0) +
+                        (Weapon?.Damage ?? 0) * DurabilityModifier(Weapon) +
+                        (Boots?.Damage ?? 0) * DurabilityModifier(Boots) +
+                        (Hat?.Damage ?? 0) * DurabilityModifier(Hat) +
+                        (Shirt?.Damage ?? 0) * DurabilityModifier(Shirt) +
                         (Coat?.Damage ?? 0) * DurabilityModifier(Coat) +
-                        (Glove?.Damage ?? 0) * DurabilityModifier(Glove) + 
+                        (Glove?.Damage ?? 0) * DurabilityModifier(Glove) +
                         (Leggings?.Damage ?? 0) * DurabilityModifier(Leggings) +
-                   (int)Math.Floor(CharData.GetLevel(enemy) * 0.5M));
+                   (int)Math.Floor(GetLevel(enemy) * 0.5M));
         }
         public int TotalHP(Character enemy = null)
         {
@@ -167,7 +185,7 @@ namespace Kurumi.Modules.Games.Duel.Database
                         (Coat?.HP ?? 0) * DurabilityModifier(Coat) +
                         (Glove?.HP ?? 0) * DurabilityModifier(Glove) +
                         (Leggings?.HP ?? 0) * DurabilityModifier(Leggings) +
-                        CharData.GetLevel(enemy) * 2);
+                        GetLevel(enemy) * 2);
         }
         public int TotalResistance(Character enemy = null)
         {
@@ -179,7 +197,7 @@ namespace Kurumi.Modules.Games.Duel.Database
                         (Coat?.Resistance ?? 0) * DurabilityModifier(Coat) +
                         (Glove?.Resistance ?? 0) * DurabilityModifier(Glove) +
                         (Leggings?.Resistance ?? 0) * DurabilityModifier(Leggings) +
-                   (int)Math.Floor(CharData.GetLevel(enemy) * 0.2M));
+                   (int)Math.Floor(GetLevel(enemy) * 0.2M));
         }
         public int TotalResPenetration()
         {
@@ -202,7 +220,7 @@ namespace Kurumi.Modules.Games.Duel.Database
                             (Coat?.CritChance ?? 0) * DurabilityModifier(Coat) +
                             (Glove?.CritChance ?? 0) * DurabilityModifier(Glove) +
                             (Leggings?.CritChance ?? 0) * DurabilityModifier(Leggings) +
-                        (int)Math.Floor(CharData.GetLevel(enemy) * 0.05M));
+                        (int)Math.Floor(GetLevel(enemy) * 0.05M));
             if (crit > 100)
                 crit = 100;
             return crit;
@@ -221,7 +239,7 @@ namespace Kurumi.Modules.Games.Duel.Database
 
         private double DurabilityModifier(PlayerItem item)
         {
-            if (item == null || CharData.Ai)
+            if (item == null || Ai)
                 return 1;
             int durabilityPercent = (int)Math.Round(((double)item.Durability / item.MaxDurability) * 100, 0);
             if (durabilityPercent >= 50)
@@ -229,5 +247,6 @@ namespace Kurumi.Modules.Games.Duel.Database
             else
                 return (double)(50 + durabilityPercent) / 100;
         }
+        #endregion Equipment
     }
 }

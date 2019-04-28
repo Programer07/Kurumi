@@ -58,18 +58,18 @@ namespace Kurumi.Modules.Leveling
         private Bitmap DrawLevelBoard(IUser User, LanguageDictionary lang)
         {
             //Get exp
-            uint UserGlobalExp = GlobalUserDatabase.GetOrFake(User.Id).Exp;
-            uint UserServerExp = GuildUserDatabase.Get(Context.Guild.Id, User.Id)?.Exp ?? 0;
+            uint UserGlobalExp = UserDatabase.GetOrFake(User.Id).Exp;
+            uint UserServerExp = GuildDatabase.GetOrFake(Context.Guild.Id, User.Id).Exp;
             //Get level
-            byte CurrentGlobalLevel = ExpManager.Level(UserGlobalExp, GuildConfigDatabase.INC_GLOBAL);
-            uint Increment = (uint)GuildConfigDatabase.GetOrFake(Context.Guild.Id).Inc;
+            byte CurrentGlobalLevel = ExpManager.Level(UserGlobalExp, GuildDatabase.INC_GLOBAL);
+            uint Increment = (uint)GuildDatabase.GetOrFake(Context.Guild.Id).Increment;
             byte CurrentServerLevel = ExpManager.Level(UserServerExp, Increment);
             //Get current level minimum exp
-            uint CurrentGlobalLevelExp = ExpManager.LevelStartExp(CurrentGlobalLevel, GuildConfigDatabase.INC_GLOBAL);
+            uint CurrentGlobalLevelExp = ExpManager.LevelStartExp(CurrentGlobalLevel, GuildDatabase.INC_GLOBAL);
             uint CurrentServerLevelExp = ExpManager.LevelStartExp(CurrentServerLevel, Increment);
             //Get next level minimum exp
-            uint NextGlobalLevelExp = ExpManager.LevelStartExp(CurrentGlobalLevel + 1U, GuildConfigDatabase.INC_GLOBAL);
-            uint NextServerLevelExp = ExpManager.LevelStartExp(CurrentServerLevel + 1U, Increment);
+            uint NextGlobalLevelExp = ExpManager.LevelStartExp((uint)(CurrentGlobalLevel + 1), GuildDatabase.INC_GLOBAL);
+            uint NextServerLevelExp = ExpManager.LevelStartExp((uint)(CurrentServerLevel + 1), Increment);
 
             double GlobalProgress = (double)UserGlobalExp / NextGlobalLevelExp * 100;
             double ServerProgress = (double)UserServerExp / NextServerLevelExp * 100;
@@ -156,7 +156,6 @@ namespace Kurumi.Modules.Leveling
             {
                 ProgressBarGraphics.DrawString(value.ToString(), f, new SolidBrush(Color.White), new PointF(Length - ValueLength, 2));
             }
-
 
             return ProgressBar;
         }

@@ -19,12 +19,14 @@ namespace Kurumi.StartUp
         public DiscordShardedClient DiscordClient;
         public IServiceProvider Services;
         public CommandHandler CommandHandler;
+        public StartupState State;
         private int StatusIndex;
         private Random rng;
         private bool Freeze;
 
         public async Task Start()
         {
+            State = StartupState.DiscordInitializing;
             int RetryCount = 0;
             try
             {
@@ -62,19 +64,22 @@ namespace Kurumi.StartUp
             }
         //Connect to discord
         Reconnect:
+            State = StartupState.DiscordLogin;
             try
             {
                 //Login
                 await DiscordClient.LoginAsync(TokenType.Bot, Config.BotToken);
                 await DiscordClient.StartAsync();
                 await DiscordClient.SetStatusAsync(UserStatus.Online);
+                State = StartupState.Ready;
                 //Set it to 0 to reset reconnecting
                 RetryCount = 0;
                 while(true)
                 {
+                    while (State != StartupState.Ready) await Task.Delay(1000);
                     if (Console.ReadLine().ToLower() == "quit")
                     {
-                        Program.Exit(this, null);
+                        await Program.Quit();
                         Program.ExitHandled = true;
                         Environment.Exit(0);
                     }
@@ -102,9 +107,10 @@ namespace Kurumi.StartUp
                 goto Reconnect;
             }
         }
-        public async void Shutdown()
+        public async Task Shutdown()
         {
             await DiscordClient.LogoutAsync();
+            while (DiscordClient.LoginState != LoginState.LoggedOut) await Task.Delay(10);
             await DiscordClient.StopAsync();
             DiscordClient.Dispose();
         }
@@ -120,7 +126,6 @@ namespace Kurumi.StartUp
             ( "you | !k.help", ActivityType.Watching ),
             ( "Vote for Kurumi on discordbots.org | !k.vote", ActivityType.Playing ),
         };
-
         public void NextPlayingStatus()
         {
             Task.Run(async () => 
@@ -144,7 +149,18 @@ namespace Kurumi.StartUp
                 return Task.CompletedTask;
             });
         }
-
         public bool FreezeStatusMessage() => Freeze = !Freeze;
+    }
+
+    public enum StartupState : byte
+    {
+        Loading,
+        DatabasesLoading,
+        DatabaseReady,
+        EventsLoading,
+        EventsLoaded,
+        DiscordInitializing,
+        DiscordLogin,
+        Ready
     }
 }

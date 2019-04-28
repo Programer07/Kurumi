@@ -1,6 +1,9 @@
 ﻿using Discord;
 using Kurumi.Common;
+using Kurumi.Common.Extensions;
 using Kurumi.Services.Database;
+using Kurumi.Services.Database.Models;
+using MongoDB.Driver;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kurumi.Modules.Games.Duel.Database
+namespace Kurumi.Services.Database.Databases
 {
     public class CharacterDatabase : IKurumiDatabase //TODO: Repair command
     {
@@ -31,7 +34,7 @@ namespace Kurumi.Modules.Games.Duel.Database
         {
             for (int i = 0; i < Characters.Count; i++)
             {
-                if (Characters[i].Data.Owner == OwnerId)
+                if (Characters[i].Owner == OwnerId)
                     return Characters[i];
             }
             return null;
@@ -40,18 +43,11 @@ namespace Kurumi.Modules.Games.Duel.Database
         {
             for (int i = 0; i < Characters.Count; i++)
             {
-                if (Characters[i].Data.Name.Equals(Name, StringComparison.CurrentCultureIgnoreCase))
+                if (Characters[i].Name.Equals(Name, StringComparison.CurrentCultureIgnoreCase))
                     return Characters[i];
             }
             return null;
         }
-        public static Task DeleteCharacter(Character character)
-        {
-            Directory.Delete($"{KurumiPathConfig.CharacterDatabase}{character.Data.Name}", true);
-            Characters.Remove(character);
-            return Task.CompletedTask;
-        }
-
 
         public void Load()
         {
@@ -60,47 +56,43 @@ namespace Kurumi.Modules.Games.Duel.Database
             {
                 string items = File.ReadAllText(path);
                 DefaultItems = new ConcurrentList<Item>(JsonConvert.DeserializeObject<List<Item>>(items));
-                Console.Write("\r#Items loaded");
+                ConsoleHelper.Write("Items loaded", ConsoleColor.Green);
             }
             else
                 Utilities.Log(new LogMessage(LogSeverity.Warning, "CharacterDatabase", "Items.json not found."));
 
-            var characters = Directory.GetDirectories(KurumiPathConfig.CharacterDatabase);
+            ConsoleHelper.Write("Waiting for MongoDB...", ConsoleColor.Yellow);
             var DefaultItem = GetItem(x => x.Name == "Default") ?? new Item();
-            for (int i = 0; i < characters.Length; i++)
+            var characters = DatabaseManager.Database.GetCollection<Character>("Character").Find(_ => true).ToList();
+            for (int i = 0; i < characters.Count; i++)
             {
-                string Path = characters[i] + KurumiPathConfig.Separator + "Character.json";
-                string Content = File.ReadAllText(Path);
-                var Character = JsonConvert.DeserializeObject<Character>(Content);
-                Character.Data.Name = new DirectoryInfo(characters[i]).Name;
-                Character.Equipment.BaseValues = DefaultItem;
-                Character.Equipment.CharData = Character.Data;
+                var Character = characters[i];
+                Character.BaseValues = DefaultItem;
                 Characters.Add(Character);
-                Console.Write($"\r#Loaded {i}/{characters.Length} | Current: {Character.Data.Name}");
+                ConsoleHelper.Write($"Loaded {i}/{characters.Count} | Current: {Character.Name}", ConsoleColor.Yellow);
             }
-            Console.Write("\r                                                                                                           ");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("\r#Characters loaded.\n");
+            ConsoleHelper.ClearCurrentLine();
+            ConsoleHelper.WriteLine("Characters loaded.", ConsoleColor.Green);
         }
 
         public void Save(bool Show)
         {
+            if (Characters.Count == 0)
+                return;
+            var Collection = DatabaseManager.Database.GetCollection<Character>("Character_Temp");
             for (int i = 0; i < Characters.Count; i++)
             {
                 var character = Characters[i];
-                string Content = JsonConvert.SerializeObject(character, Formatting.Indented);
-                string Path = $"{KurumiPathConfig.CharacterDatabase}{character.Data.Name}";
-                Directory.CreateDirectory(Path);
-                Path += $"{KurumiPathConfig.Separator}Character.json";
-                File.WriteAllText(Path, Content);
+                Collection.InsertOne(character);
                 if (Show)
-                    Console.Write($"\r#Saved: {i}/{Characters.Count} | Current: {character.Data.Name}");
+                    ConsoleHelper.Write($"Saved: {i}/{Characters.Count} | Current: {character.Name}", ConsoleColor.Yellow);
             }
+            DatabaseManager.Database.DropCollection("Character");
+            DatabaseManager.Database.RenameCollection("Character_Temp", "Character");
             if (Show)
             {
-                Console.Write("\r                                                                                                           ");
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write("\r#Characters saved.\n");
+                ConsoleHelper.ClearCurrentLine();
+                ConsoleHelper.Write("Characters saved.\n", ConsoleColor.Green);
             }
         }
     }

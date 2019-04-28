@@ -18,7 +18,7 @@ namespace Kurumi.Services
         {
             { EventType.StatusUpdate, (e) => Program.Bot.NextPlayingStatus() },
             { EventType.ESSave, Current.Save },
-            { EventType.DBSave, (e) => DatabaseManager.Save() },
+            { EventType.DBSave, (e) => DatabaseManager.SaveDatabases(false) },
             { EventType.Reminder, Remindme.Send },
         };
 

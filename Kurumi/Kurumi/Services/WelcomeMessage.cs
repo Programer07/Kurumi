@@ -22,7 +22,7 @@ namespace Kurumi.Services
                 try
                 {
                     //Get channel id
-                    ulong ChannelId = GuildConfigDatabase.GetOrFake(guild.Id).WelcomeChannel;
+                    ulong ChannelId = GuildDatabase.GetOrFake(guild.Id).WelcomeChannel;
                     //If channel is not 0
                     if (ChannelId != 0)
                     {
@@ -36,7 +36,7 @@ namespace Kurumi.Services
                         }
                         //Get welcome message
                         KurumiRandom rand = new KurumiRandom();
-                        List<string> Messages = GuildConfigDatabase.Get(guild.Id).WelcomeMessages;
+                        List<string> Messages = GuildDatabase.Get(guild.Id).WelcomeMessages;
                         if (Messages.Count == 0) //There was a bug which let users set welcome channel without message, this corrects that error.
                             Messages.Add("Welcome {user} to the {server} server!"); 
 

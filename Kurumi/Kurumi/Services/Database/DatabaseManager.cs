@@ -2,8 +2,10 @@
 using Ionic.Zip;
 using Kurumi.Common;
 using Kurumi.Common.Extensions;
-using Kurumi.Modules.Games.Duel.Database;
 using Kurumi.Services.Database.Databases;
+using Kurumi.Services.Database.Models;
+using Kurumi.StartUp;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,75 +17,91 @@ namespace Kurumi.Services.Database
 {
     public class DatabaseManager
     {
-        public static readonly List<(IKurumiDatabase db, string type)> Databases = new List<(IKurumiDatabase, string)>()
+        private static MongoClient DatabaseClient { get; set; }
+        public static IMongoDatabase Database { get; set; }
+
+        public static readonly List<(IKurumiDatabase db, string type)> Databases = new List<(IKurumiDatabase db, string type)>()
         {
-            (new GuildConfigDatabase(), "guild configs"),
-            (new GlobalUserDatabase(), "global users"),
-            (new GuildUserDatabase(), "guild users"),
-            (new AfkMessageDatabase(), "afk messages"),
-            (new ModDatabase(), "warnings"),
-            (new RewardDatabase(), "rewards"),
+            (new GuildDatabase(), "guilds"),
+            (new UserDatabase(), "users"),
             (new CharacterDatabase(), "characters")
         };
-        private static byte LastSaved = 32;
 
-        public static void Save()
+        public static void LoadDatabases()
         {
+            Program.Bot.State = StartupState.DatabasesLoading;
+            ConsoleHelper.WriteLine("Loading databases.", ConsoleColor.Blue);
+            if (DatabaseClient == null)
+            {
+                string ConnectionString = "mongodb://";
+                if (Config.MongoDBUsername != null)
+                    ConnectionString += $"{Config.MongoDBUsername}:{Config.MongoDBPassword}@";
+                ConnectionString += $"{Config.MongoDBIp}:{Config.MongoDBPort}";
+                DatabaseClient = new MongoClient(ConnectionString);
+                Database = DatabaseClient.GetDatabase(Config.MongoDBName);
+            }
+
+            var collections = Database.ListCollectionNames().ToList();
+            bool r = false;
+            for (int i = 0; i < collections.Count; i++)
+            {
+                if (collections[i].EndsWith("_Temp"))
+                {
+                    if (!r)
+                        ConsoleHelper.WriteLine("Dropping unfinished saves...", ConsoleColor.Red);
+                    r = true;
+                    Database.DropCollection(collections[i]);
+                }
+            }
+
             for (int i = 0; i < Databases.Count; i++)
             {
-                var db = Databases[i].db;
-                db.Save(false);
-            }
-
-            if (DateTime.Now.Day != LastSaved && DateTime.Now.Hour < 3)
-            {
-                if (Config.BackupDB)
-                    Backup();
-                LastSaved = (byte)DateTime.Now.Day;
-            }
-        }
-
-        private static Task Backup()
-        {
-            return Task.Run(() => 
-            {
-                Stopwatch sw = Stopwatch.StartNew();
+                (IKurumiDatabase db, string type) = Databases[i];
+                ConsoleHelper.WriteLine($"Loading {type}...", ConsoleColor.Cyan);
                 try
                 {
-                    Utilities.Log(new LogMessage(LogSeverity.Info, "DatabaseManager", "Starting database backup!"));
-                    var BackupPath = $"{KurumiPathConfig.Root}Backup{KurumiPathConfig.Separator}{DateTime.Now.ToShortDateString().Replace("/", "-")}{KurumiPathConfig.Separator}";
-                    Directory.CreateDirectory(BackupPath);
-                    var DatabaseDirectories = Directory.GetDirectories(KurumiPathConfig.DbRoot);
-                    for (int i = 0; i < DatabaseDirectories.Length; i++)
-                    {
-                        DirectoryInfo dir = new DirectoryInfo(DatabaseDirectories[i]);
-                        if (dir.Name == "CharacterDatabase") //Character database cannot be compressed because of the names
-                        {
-                            DirectoryExtensions.Copy(DatabaseDirectories[i], $"{BackupPath}{dir.Name}", true);
-                            continue;
-                        }
-
-                        ZipFile file = new ZipFile
-                        {
-                            CompressionLevel = Ionic.Zlib.CompressionLevel.BestSpeed,
-                            Comment = "Kurumi database backup. Date: " + DateTime.Now,
-                            UseZip64WhenSaving = Zip64Option.AsNecessary,
-                            AlternateEncodingUsage = ZipOption.AsNecessary,
-                            TempFileFolder = KurumiPathConfig.Temp
-                        };
-                        file.AddDirectory(dir.FullName);
-                        file.Save($"{BackupPath}{dir.Name}.zip");
-                    }
-                    sw.Stop();
-                    Utilities.Log(new LogMessage(LogSeverity.Info, "DatabaseManager", $"Database backup was successful. Took: {sw.ElapsedMilliseconds} ms"));
+                    db.Load();
                 }
                 catch (Exception ex)
                 {
-                    sw.Stop();
-                    Utilities.Log(new LogMessage(LogSeverity.Error, "DatabaseManager", "Database backup failed!\n", ex));
+                    Program.Crash($"loading {type}", ex);
                 }
-                return Task.CompletedTask;
-            });
+            }
+            ConsoleHelper.WriteLine("Databases loaded.", ConsoleColor.Blue);
+            Program.Bot.State = StartupState.DatabaseReady;
+        }
+
+        public static void SaveDatabases(bool Show)
+        {
+            if (!Show)
+            {
+                BackgroundSave();
+                return;
+            }
+
+            ConsoleHelper.WriteLine("Saving databases.", ConsoleColor.Blue);
+            for (int i = 0; i < Databases.Count; i++)
+            {
+                (IKurumiDatabase db, string type) = Databases[i];
+                ConsoleHelper.WriteLine($"Saving {type}...", ConsoleColor.Cyan);
+                try
+                {
+                    db.Save(Show);
+                }
+                catch (Exception ex)
+                {
+                    Program.Crash($"saving {type}", ex);
+                }
+            }
+            ConsoleHelper.WriteLine("Databases saved.", ConsoleColor.Blue);
+        }
+
+        private static void BackgroundSave()
+        {
+            for (int i = 0; i < Databases.Count; i++)
+            {
+                Databases[i].db.Save(false);
+            }
         }
     }
 }

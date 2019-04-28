@@ -25,10 +25,10 @@ namespace Kurumi.Services.Leveling
                 var lang = Language.GetLanguage(context.Guild);
 
                 //Global level
-                var User = GlobalUserDatabase.GetOrCreate(context.User.Id);
-                byte level = Level(User.Exp, GuildConfigDatabase.INC_GLOBAL);
+                var User = UserDatabase.GetOrCreate(context.User.Id);
+                byte level = Level(User.Exp, GuildDatabase.INC_GLOBAL);
                 User.Exp += Amount;
-                byte newLevel = Level(User.Exp, GuildConfigDatabase.INC_GLOBAL);
+                byte newLevel = Level(User.Exp, GuildDatabase.INC_GLOBAL);
 
                 //Send message if new level is greater then old level
                 if (level < newLevel)
@@ -38,11 +38,11 @@ namespace Kurumi.Services.Leveling
                 //Server level
 
                 //Get increment
-                var config = GuildConfigDatabase.GetOrFake(context.Guild.Id);
-                var increment = (uint)config.Inc;
+                var config = GuildDatabase.GetOrFake(context.Guild.Id);
+                var increment = (uint)config.Increment;
 
                 //Add exp
-                var gUser = GuildUserDatabase.GetOrCreate(context.Guild.Id, context.User.Id);
+                var gUser = GuildDatabase.GetOrCreate(context.Guild.Id, context.User.Id);
                 level = Level(gUser.Exp, increment);
                 gUser.Exp += Amount;
                 newLevel = Level(gUser.Exp, increment);
@@ -53,10 +53,11 @@ namespace Kurumi.Services.Leveling
                     await context.Channel.TrySendEmbedAsync(lang["leveling_level_up_server", "USER", context.User.Username, "LEVEL", newLevel]);
 
                     //Get rewards and check if there is a set reward for the new level
-                    var Rewards = RewardDatabase.Get(context.Guild.Id)?.Rewards;
-                    if(Rewards != null && Rewards.ContainsKey(newLevel))
+                    var Rewards = GuildDatabase.GetOrFake(context.Guild.Id).Rewards;
+                    Reward r;
+                    if((r = Rewards.FirstOrDefault(x => x.Level == newLevel)) != null)
                     {
-                        IRole rewardRole = context.Guild.GetRole(Rewards[newLevel]);
+                        IRole rewardRole = context.Guild.GetRole(r.Role);
                         if (rewardRole == null)
                             return;
 
@@ -83,7 +84,7 @@ namespace Kurumi.Services.Leveling
                 return RankingCache.ranks;
             //Calculate global rank
             Dictionary<ulong, uint> RankableUsers = new Dictionary<ulong, uint>();
-            foreach (var user in GlobalUserDatabase.Cache)
+            foreach (var user in UserDatabase.Cache)
             {
                 IUser u = client.GetUserAsync(user.Key).Result;
                 if (u != null && user.Value != null)
@@ -91,7 +92,7 @@ namespace Kurumi.Services.Leveling
             }
             Dictionary<ulong, uint> GlobalRankedUsers = (from entry in RankableUsers orderby entry.Value descending select entry).ToDictionary(x => x.Key, x => x.Value);
             //Calculate server rank
-            var ServerUsers = GuildUserDatabase.Get(guild.Id);
+            var ServerUsers = GuildDatabase.Get(guild.Id)._Users;
             Dictionary<ulong, uint> ServerRankableUsers = new Dictionary<ulong, uint>();
             foreach (var user in ServerUsers)
             {
@@ -112,15 +113,6 @@ namespace Kurumi.Services.Leveling
             var Ranking = new List<ulong>[2] { Users, SUsers };
             RankingCache = (DateTime.Now, guild, Ranking);
             return Ranking;
-        }
-
-        public static void ClearGuildRanking(IGuild guild)
-        {
-            var path = $"{KurumiPathConfig.GuildDatabase}{guild.Id}{KurumiPathConfig.Separator}Users";
-            if (Directory.Exists(path))
-                Directory.Delete(path, true);
-
-            GuildUserDatabase.Set(guild.Id, null);
         }
 
         public static byte Level(uint Exp, uint Increment)

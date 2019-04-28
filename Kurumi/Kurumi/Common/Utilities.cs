@@ -10,6 +10,7 @@ using Sentry;
 using Sentry.Protocol;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,18 +32,42 @@ namespace Kurumi.Common
                             if (lmsg.Message.Contains(IgnoreLogger[i]))
                                 return Task.CompletedTask;
 
-                    if (lmsg.Exception != null && lmsg.Exception is HttpException httpEx)
+                    if (lmsg.Exception != null)
                     {
-                        if (httpEx.DiscordCode == 500)
+                        bool Return = false;
+                        if (lmsg.Exception is HttpException httpEx && (httpEx.DiscordCode == 500 || httpEx.DiscordCode == 50013 || httpEx.DiscordCode == 50001))
                         {
-                            Log(new LogMessage(LogSeverity.Warning, "Discord", "(500) Internal server error!")/*, Context*/);
-                            return Task.CompletedTask;
+                            if (httpEx.DiscordCode == 500)
+                            {
+                                Log(new LogMessage(LogSeverity.Warning, "Discord", "(500) Internal server error!")/*, Context*/);
+                                Return = true;
+                            }
+                            else if (httpEx.DiscordCode == 50013)
+                            {
+                                Log(new LogMessage(LogSeverity.Warning, "Discord", "(50013) Missing permission!"), Context);
+                                Return = true;
+                            }
+                            else if (httpEx.DiscordCode == 50001)
+                            {
+                                Log(new LogMessage(LogSeverity.Warning, "Discord", "(50001) Missing access!"), Context);
+                                Return = true;
+                            }
+                            if (Context != null)
+                                ErrorMessage(Context, lmsg.Exception);
                         }
-                        else if (httpEx.DiscordCode == 50013)
+                        else if (lmsg.Exception is HttpRequestException httpReqEx)
                         {
-                            Log(new LogMessage(LogSeverity.Warning, "Discord", "(50013) Missing permission!"), Context);
-                            return Task.CompletedTask;
+                            if (httpReqEx.ToString().Contains("500 (Internal Server Error)"))
+                            {
+                                Log(new LogMessage(LogSeverity.Warning, "HttpRequest", "(500) Internal server error!"), Context);
+                                Return = true;
+                            }
+
+                            if (Context != null)
+                                ErrorMessage(Context, lmsg.Exception);
                         }
+
+                        if (Return) return Task.CompletedTask;
                     }
 
                     Console.ResetColor();

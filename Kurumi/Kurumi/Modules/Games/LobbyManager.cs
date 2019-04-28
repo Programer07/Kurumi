@@ -390,7 +390,7 @@ namespace Kurumi.Modules.Games
                 }
                 else if (lobby.Ingame)
                 {
-                    await Context.Channel.SendEmbedAsync(lang["lobby_already_ingame"]);
+                    await Context.Channel.SendEmbedAsync(lang["lobby_lobby_already_ingame"]);
                     return;
                 }
 

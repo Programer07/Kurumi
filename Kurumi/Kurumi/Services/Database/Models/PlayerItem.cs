@@ -1,37 +1,39 @@
 ﻿using Kurumi.Common;
 using Kurumi.Common.Extensions;
+using Kurumi.Services.Database.Databases;
+using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Kurumi.Modules.Games.Duel.Database
+namespace Kurumi.Services.Database.Models
 {
     public class PlayerItem : IItem
     {
         #region Interface
         public int Id { get; set; }
-        [JsonIgnore]
+        [BsonIgnore]
         public ItemType Type { get; set; }
-        [JsonIgnore]
+        [BsonIgnore]
         public string Name { get; set; }
-        [JsonIgnore]
+        [BsonIgnore]
         public int HP { get; set; }
-        [JsonIgnore]
+        [BsonIgnore]
         public int Damage { get; set; }
-        [JsonIgnore]
+        [BsonIgnore]
         public int Resistance { get; set; }
-        [JsonIgnore]
+        [BsonIgnore]
         public int ResPenetration { get; set; }
-        [JsonIgnore]
+        [BsonIgnore]
         public int CritChance { get; set; }
-        [JsonIgnore]
+        [BsonIgnore]
         public int CritMultiplier { get; set; }
-        [JsonIgnore]
+        [BsonIgnore]
         public int Combo { get; set; }
-        [JsonIgnore]
+        [BsonIgnore]
         public int StackLimit { get; set; }
-        [JsonIgnore]
+        [BsonIgnore]
         public long MaxDurability { get; set; }
 
         public long Durability { get; set; }
@@ -39,8 +41,8 @@ namespace Kurumi.Modules.Games.Duel.Database
 
         public Dictionary<string, int> CustomEffects { get; set; }
 
-        [JsonConstructor]
-        public PlayerItem(int Id, int Durability, Dictionary<string, int> CustomEffects)
+        [BsonConstructor]
+        public PlayerItem(int Id, long Durability, Dictionary<string, int> CustomEffects)
         {
             this.Id = Id;
             this.Durability = Durability;

@@ -28,10 +28,14 @@ namespace Kurumi.Common
         public static string RandomOrgApiKey { get; private set; }
         public static string AniListClientId { get; private set; }
         public static string AniListSecret { get; private set; }
+        public static string MongoDBUsername { get; private set; }
+        public static string MongoDBPassword { get; private set; }
+        public static string MongoDBIp { get; private set; }
+        public static string MongoDBPort { get; private set; }
+        public static string MongoDBName { get; private set; }
         public static uint EmbedColor { get; private set; }
         public static string DefaultLanguage { get; set; }
         public static decimal YoutubeCacheSize { get; set; }
-        public static bool BackupDB { get; set; }
         public static int LoggerMode { get; set; }
         public static byte ShardCount { get; set; }
         public static ulong[] Administrators { get; private set; }
@@ -112,9 +116,6 @@ namespace Kurumi.Common
                 ValidateConfig("DefaultLanguage", ref cfg, typeof(string), false, "en", "Default language is empty! Starting with 'English (en)'.");
                 DefaultLanguage = (string)cfg;
 
-                ValidateConfig("BackupDB", ref cfg, typeof(bool), false, false, "Database backup is disabled!");
-                BackupDB = (bool)cfg;
-
                 ValidateConfig("LoggerMode", ref cfg, typeof(long), false, 0, "");
                 LoggerMode = Convert.ToInt32(cfg);
                 if (LoggerMode < 0 || LoggerMode > 12)
@@ -122,6 +123,26 @@ namespace Kurumi.Common
                     SendWarning("Invalid logger type!");
                     LoggerMode = 0;
                 }
+
+                ValidateConfig("MongoDBUsername", ref cfg, typeof(string), false, null, "No DB username is set, ignoring password.");
+                MongoDBUsername = cfg?.ToString();
+
+                if (MongoDBUsername != null)
+                {
+                    ValidateConfig("MongoDBPassword", ref cfg, typeof(string), false, null, "No DB password is set, ignoring username.");
+                    MongoDBPassword = cfg?.ToString();
+                    if (MongoDBPassword == null)
+                        MongoDBUsername = null;
+                }
+
+                ValidateConfig("MongoDBIp", ref cfg, typeof(string), false, "127.0.0.1", "No DB Ip is set, using 127.0.0.1!");
+                MongoDBIp = cfg.ToString();
+
+                ValidateConfig("MongoDBPort", ref cfg, typeof(string), false, "27017", "No DB port is set, using 27017!");
+                MongoDBPort = cfg.ToString();
+
+                ValidateConfig("MongoDBName", ref cfg, typeof(string), false, "Kurumi", "No DB name is set, using Kurumi!");
+                MongoDBName = cfg.ToString();
 
                 return true;
             }

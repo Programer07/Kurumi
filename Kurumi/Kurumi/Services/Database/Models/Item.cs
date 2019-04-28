@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Kurumi.Modules.Games.Duel.Database
+namespace Kurumi.Services.Database.Models
 {
     public class Item : IItem
     {

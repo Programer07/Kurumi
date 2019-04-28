@@ -9,6 +9,7 @@ using Kurumi.Services.Leveling;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ namespace Kurumi.Modules.Utility
                     //Create embed
                     EmbedBuilder embed = new EmbedBuilder().WithColor(Config.EmbedColor);
                     embed.WithDescription(lang["language_desc"]);
-                    embed.AddField(lang["language_current"], GuildConfigDatabase.GetOrFake(Context.Guild.Id).Lang);
+                    embed.AddField(lang["language_current"], GuildDatabase.GetOrFake(Context.Guild.Id).Lang);
 
                     string Names = string.Empty;
                     string Versions = string.Empty;
@@ -53,7 +54,7 @@ namespace Kurumi.Modules.Utility
                 else if (Language.GetLanguagCode(NewLang) != null)
                 {
                     //Set the language
-                    GuildConfigDatabase.GetOrCreate(Context.Guild.Id).Lang = Language.GetLanguagCode(NewLang);
+                    GuildDatabase.GetOrCreate(Context.Guild.Id).Lang = Language.GetLanguagCode(NewLang);
                     //Refresh
                     lang = Language.GetLanguage(Context.Guild);
                     //Send confirmation
@@ -89,7 +90,7 @@ namespace Kurumi.Modules.Utility
                         await Context.Channel.SendEmbedAsync(lang["prefix_too_long"]);
                         return;
                     }
-                    GuildConfigDatabase.GetOrCreate(Context.Guild.Id).Prefix = NewPrefix;
+                    GuildDatabase.GetOrCreate(Context.Guild.Id).Prefix = NewPrefix;
                     await Context.Channel.SendEmbedAsync(lang["prefix_set"]);
                 }
                 await Utilities.Log(new LogMessage(LogSeverity.Info, "Prefix", "success"), Context);
@@ -117,7 +118,7 @@ namespace Kurumi.Modules.Utility
                         return;
                     }
                     //Set
-                    GuildConfigDatabase.GetOrCreate(Context.Guild.Id).Inc = (int)Inc;
+                    GuildDatabase.GetOrCreate(Context.Guild.Id).Increment = (int)Inc;
                     //Calculate first 10 levels
                     string Levels = string.Empty;
                     for (uint i = 1; i <= 10; i++)
@@ -128,13 +129,13 @@ namespace Kurumi.Modules.Utility
                 else if (bool.TryParse(arg, out bool State)) //Check for bool
                 {
                     //Set, send
-                    GuildConfigDatabase.GetOrCreate(Context.Guild.Id).Ranking = State;
+                    GuildDatabase.GetOrCreate(Context.Guild.Id).Ranking = State;
                     await Context.Channel.SendEmbedAsync(lang["ranking_state_set", "STATE", State]);
                 }
                 else //Send current settings
                 {
-                    var current = GuildConfigDatabase.GetOrFake(Context.Guild.Id);
-                    int inc = current.Inc;
+                    var current = GuildDatabase.GetOrFake(Context.Guild.Id);
+                    int inc = current.Increment;
                     bool state = current.Ranking;
                     await Context.Channel.SendEmbedAsync(lang["ranking_state", "INC", inc, "STATE", state]);
                 }
@@ -157,7 +158,7 @@ namespace Kurumi.Modules.Utility
                 if (NewChannel == null)
                 {
                     //Get current channel
-                    ulong currentchannel = GuildConfigDatabase.GetOrFake(Context.Guild.Id).WelcomeChannel;
+                    ulong currentchannel = GuildDatabase.GetOrFake(Context.Guild.Id).WelcomeChannel;
                     //Check if the channel is empty
                     if (currentchannel == 0)
                     {
@@ -177,7 +178,7 @@ namespace Kurumi.Modules.Utility
                 else if (NewChannel == "remove")
                 {
                     //Set to 0 and send
-                    var GuildConfig = GuildConfigDatabase.Get(Context.Guild.Id);
+                    var GuildConfig = GuildDatabase.Get(Context.Guild.Id);
                     if (GuildConfig != null)
                         GuildConfig.WelcomeChannel = 0;
                     await Context.Channel.SendEmbedAsync(lang["welcomechannel_removed"]);
@@ -193,7 +194,7 @@ namespace Kurumi.Modules.Utility
                         return;
                     }
                     //Set, add default message and send
-                    var guildConfig = GuildConfigDatabase.GetOrCreate(Context.Guild.Id);
+                    var guildConfig = GuildDatabase.GetOrCreate(Context.Guild.Id);
                     guildConfig.WelcomeChannel = channel.Id;
                     guildConfig.WelcomeMessages.Add("Welcome {user} to the {server} server!");
                     await Context.Channel.SendEmbedAsync(lang["welcomechannel_set", "CHANNEL", channel.Name]);
@@ -218,7 +219,7 @@ namespace Kurumi.Modules.Utility
                 if (op == "add")
                 {
                     //Check if there is a welcome channel
-                    ulong wchannel = GuildConfigDatabase.GetOrFake(Context.Guild.Id).WelcomeChannel;
+                    ulong wchannel = GuildDatabase.GetOrFake(Context.Guild.Id).WelcomeChannel;
                     if (wchannel == 0)
                     {
                         await Context.Channel.SendEmbedAsync(lang["welcomemessage_no_channel"]);
@@ -236,13 +237,13 @@ namespace Kurumi.Modules.Utility
                         await Context.Channel.SendEmbedAsync(lang["welcomemessage_message_too_long"]);
                         return;
                     }
-                    if (GuildConfigDatabase.Get(Context.Guild.Id).WelcomeMessages.Count == 5 && DiscordBotlist.UserVoted(Context.Guild.OwnerId).Result)
+                    if (GuildDatabase.Get(Context.Guild.Id).WelcomeMessages.Count == 5 && DiscordBotlist.UserVoted(Context.Guild.OwnerId).Result)
                     {
                         await Context.Channel.SendEmbedAsync(lang["welcomemessage_too_much", "OWNER", Context.Guild.GetOwnerAsync().Result.Username]);
                         return;
                     }
                     //Add it
-                    GuildConfigDatabase.Get(Context.Guild.Id).WelcomeMessages.Add(arg);
+                    GuildDatabase.Get(Context.Guild.Id).WelcomeMessages.Add(arg);
                     await Context.Channel.SendEmbedAsync(lang["welcomemessage_set"]);
                 }
                 else if (op == "remove")
@@ -254,7 +255,7 @@ namespace Kurumi.Modules.Utility
                         return;
                     }
                     //Check if Id is a welcome message or not removing last
-                    List<string> msges = GuildConfigDatabase.GetOrFake(Context.Guild.Id)?.WelcomeMessages;
+                    List<string> msges = GuildDatabase.GetOrFake(Context.Guild.Id)?.WelcomeMessages;
                     if (msges.Count == 1)
                     {
                         await Context.Channel.SendEmbedAsync(lang["welcomemessage_cannot_remove"]);
@@ -266,7 +267,7 @@ namespace Kurumi.Modules.Utility
                         return;
                     }
                     //Remove and send
-                    GuildConfigDatabase.Get(Context.Guild.Id).WelcomeMessages.RemoveAt(Id - 1);
+                    GuildDatabase.Get(Context.Guild.Id).WelcomeMessages.RemoveAt(Id - 1);
                     await Context.Channel.SendEmbedAsync(lang["welcomemessage_removed"]);
                 }
                 else if (op == "list")
@@ -276,7 +277,7 @@ namespace Kurumi.Modules.Utility
                         page = 1;
                     page--;
                     //Get all
-                    List<string> msges = GuildConfigDatabase.GetOrFake(Context.Guild.Id).WelcomeMessages;
+                    List<string> msges = GuildDatabase.GetOrFake(Context.Guild.Id).WelcomeMessages;
                     //Construct string
                     int i = 1;
                     string PageMessages = string.Empty;
@@ -327,24 +328,20 @@ namespace Kurumi.Modules.Utility
                 if (op == "list")
                 {
                     //Check if there are any
-                    Reward rewards = RewardDatabase.Get(Context.Guild.Id);
-                    if (rewards == null)
-                    {
-                        await Context.Channel.SendEmbedAsync(lang["levelreward_empty"]);
-                        return;
-                    }
+                    List<Reward> rewards = GuildDatabase.GetOrFake(Context.Guild.Id).Rewards;
                     //Load
-                    if (rewards.Rewards.Count == 0)
+                    if (rewards.Count == 0)
                     {
                         await Context.Channel.SendEmbedAsync(lang["levelreward_empty"]);
                         return;
                     }
                     //Construct the string
                     string RoleList = string.Empty;
-                    foreach (KeyValuePair<int, ulong> a in rewards.Rewards)
+                    for (int i = 0; i < rewards.Count; i++)
                     {
-                        IRole Role = Context.Guild.GetRole(a.Value);
-                        RoleList += lang["levelreward_list_item", "LEVEL", a.Key.ToString(), "ROLE", Role?.Name ?? "INVALID-ROLE"];
+                        var reward = rewards[i];
+                        IRole Role = Context.Guild.GetRole(reward.Role);
+                        RoleList += lang["levelreward_list_item", "LEVEL", reward.Level, "ROLE", Role?.Name ?? "INVALID-ROLE"];
                     }
                     //Send
                     await Context.Channel.SendEmbedAsync(lang["levelreward_desc", "LIST", RoleList]);
@@ -352,14 +349,14 @@ namespace Kurumi.Modules.Utility
                 else if (op == "add" || op == "set")
                 {
                     //Try to get the target level
-                    if (!int.TryParse(level, out int Level) && Level <= 0)
+                    if (!uint.TryParse(level, out uint Level) && Level <= 0)
                     {
                         await Context.Channel.SendEmbedAsync(lang["levelreward_invalid_level"]);
                         return;
                     }
-                    Reward rewards = RewardDatabase.GetOrCreate(Context.Guild.Id);
+                    List<Reward> rewards = GuildDatabase.GetOrCreate(Context.Guild.Id).Rewards;
                     //Check if the level has a role set already
-                    if (rewards.Rewards.ContainsKey(Level))
+                    if (rewards.Any(x => x.Level == Level))
                     {
                         await Context.Channel.SendEmbedAsync(lang["levelreward_already_set_level"]);
                         return;
@@ -381,13 +378,13 @@ namespace Kurumi.Modules.Utility
                         return;
                     }
                     //Check if the role is already set
-                    if (rewards.Rewards.ContainsValue(Role.Id))
+                    if (rewards.Any(x => x.Role == Role.Id))
                     {
                         await Context.Channel.SendEmbedAsync(lang["levelreward_already_set_role"]);
                         return;
                     }
                     //Add
-                    rewards.Rewards.Add(Level, Role.Id);
+                    rewards.Add(new Reward() { Level = Level, Role = Role.Id });
                     await Context.Channel.SendEmbedAsync(lang["levelreward_success_set", "LEVEL", level, "ROLE", Role.Name]);
                 }
                 else if (op == "remove")
@@ -400,22 +397,23 @@ namespace Kurumi.Modules.Utility
                         return;
                     }
                     //Get levels
-                    Reward rewards = RewardDatabase.Get(Context.Guild.Id);
+                    List<Reward> rewards = GuildDatabase.GetOrFake(Context.Guild.Id).Rewards;
                     //Check if there are any
-                    if (rewards == null)
+                    if (rewards.Count == 0)
                     {
                         await Context.Channel.SendEmbedAsync(lang["levelreward_empty"]);
                         return;
                     }
 
                     //Check if the level has a role set already
-                    if (!rewards.Rewards.ContainsKey(Level))
+                    Reward r;
+                    if ((r = rewards.FirstOrDefault(x => x.Level == Level)) != null)
                     {
                         await Context.Channel.SendEmbedAsync(lang["levelreward_not_set"]);
                         return;
                     }
                     //Remove
-                    rewards.Rewards.Remove(Level);
+                    rewards.Remove(r);
                     await Context.Channel.SendEmbedAsync(lang["levelreward_success_remove", "LEVEL", level]);
                 }
                 else

@@ -24,7 +24,7 @@ namespace Kurumi.Common
 
             //Guilds
             LanguageDictionary language;
-            string lang = GuildConfigDatabase.GetOrFake(guild.Id).Lang;
+            string lang = GuildDatabase.GetOrFake(guild.Id).Lang;
             if (Languages.ContainsKey(lang))
                 language = new LanguageDictionary(Languages[lang].Lang);
             else
@@ -113,7 +113,7 @@ namespace Kurumi.Common
                                                 .Replace($"@{var2?.ToString()}@", val2?.ToString())
                                                 .Replace($"@{var3?.ToString()}@", val3?.ToString());
                     if (Guild != null)
-                        text = text.Replace("@PREFIX@", GuildConfigDatabase.GetOrFake(Guild.Id).Prefix);
+                        text = text.Replace("@PREFIX@", GuildDatabase.GetOrFake(Guild.Id).Prefix);
                     else
                         text = text.Replace("@PREFIX@", CommandHandler.DEFAULT_PREFIX);
                     return text;

@@ -68,6 +68,7 @@ namespace Kurumi.Modules.Leveling
         }
 
         private readonly object _lock = new object();
+        private readonly string Font = "Lucida Sans";
         //If it works don't touch it
         private Bitmap DrawBoard(IUser user, int GRank, int SRank)
         {
@@ -93,13 +94,13 @@ namespace Kurumi.Modules.Leveling
                 int Fontsize = 64;
                 while (true)
                 {
-                    SizeF size = BoardGraphics.MeasureString(user.Username, new Font("Arial", Fontsize, FontStyle.Regular));
+                    SizeF size = BoardGraphics.MeasureString(user.Username, new Font(Font, Fontsize, FontStyle.Regular));
                     if (size.Width > 961.5F)
                         Fontsize--;
                     else
                         break;
                 }
-                BoardGraphics.DrawString(user.Username, new Font("Arial", Fontsize, FontStyle.Regular), UsernameBrush, UsernamePoint);
+                BoardGraphics.DrawString(user.Username, new Font(Font, Fontsize, FontStyle.Regular), UsernameBrush, UsernamePoint);
                 //Draw playing status and status
                 Color scolor = Color.AliceBlue;
                 switch (user.Status)
@@ -121,7 +122,7 @@ namespace Kurumi.Modules.Leveling
                 }
                 BoardGraphics.DrawCircle(new Pen(new SolidBrush(Color.Gray), 3), UsernamePoint.X + 40, UsernamePoint.Y + 130, 20);
                 BoardGraphics.FillCircle(new SolidBrush(scolor), UsernamePoint.X + 40, UsernamePoint.Y + 130, 19);
-                Font StatusFont = new Font("Arial", 32, FontStyle.Regular);
+                Font StatusFont = new Font(Font, 32, FontStyle.Regular);
                 if (user.Activity != null)
                 {
                     BoardGraphics.DrawString(user.Activity.Type.ToString() + " " + user.Activity.Name.ToString(), StatusFont, UsernameBrush,
@@ -130,7 +131,7 @@ namespace Kurumi.Modules.Leveling
                 else
                     BoardGraphics.DrawString(lang[$"userpanel_{user.Status.ToString().ToLower()}"], StatusFont, UsernameBrush, new PointF(UsernamePoint.X + 65, UsernamePoint.Y + 107));
                 //Draw discriminator
-                BoardGraphics.DrawString("#" + user.Discriminator, new Font("Arial", 46, FontStyle.Regular), UsernameBrush, new Point(1000, 140));
+                BoardGraphics.DrawString("#" + user.Discriminator, new Font(Font, 46, FontStyle.Regular), UsernameBrush, new Point(980, 140));
                 //Draw separator line under profile picture
                 Pen SeparatorPen = new Pen(Brushes.Gray, 4);
                 int SeparatorY = AvatarAt.Y + AvatarSize.Height + 30;
@@ -139,8 +140,8 @@ namespace Kurumi.Modules.Leveling
                 int SeparatorX = 250;
                 BoardGraphics.DrawLine(SeparatorPen, new Point(SeparatorX, SeparatorY), new Point(SeparatorX, Board.Height));
                 //Draw rank texts
-                Font RankingFont = new Font("Arial", 28, FontStyle.Regular);
-                float RankingOffset = 10;
+                Font RankingFont = new Font(Font, 30, FontStyle.Regular);
+                float RankingOffset = 3;
                 BoardGraphics.DrawString(lang["userpanel_global"], RankingFont, UsernameBrush, new PointF(RankingOffset, SeparatorY + 20));
                 BoardGraphics.DrawString(lang["userpanel_server"], RankingFont, UsernameBrush, new PointF(RankingOffset, SeparatorY + 150));
                 //Draw rank
@@ -183,15 +184,13 @@ namespace Kurumi.Modules.Leveling
                 BoardGraphics.DrawString(lang["userpanel_roles", "NUMBER", ((user as SocketGuildUser).Roles.Count - 1).ToString()]
                     + $"{DisplayRoles}", RankingFont, UsernameBrush, new PointF(SeparatorX + 35, SeparatorY + 180));
                 //Draw currency stuffs
-                int GlobalExp = (int)GlobalUserDatabase.GetOrFake(user.Id).Exp;
-                int ServerExp = (int?)GuildUserDatabase.Get(Context.Guild.Id, user.Id)?.Exp ?? 0;
-                BoardGraphics.DrawString($"{lang["userpanel_exp_global"]}{GlobalExp,6} ({lang["userpanel_exp_level"]}{ExpManager.Level((uint)GlobalExp, GuildConfigDatabase.INC_GUILD),3})" +
-                                         $"\n{lang["userpanel_exp_server"]}{ServerExp,8} ({lang["userpanel_exp_level"]}" +
-                                         $"{ExpManager.Level((uint)GlobalExp, (uint)GuildConfigDatabase.GetOrFake(Context.Guild.Id).Inc),3})",
+                uint GlobalExp = UserDatabase.GetOrFake(user.Id).Exp;
+                uint ServerExp = GuildDatabase.GetOrFake(Context.Guild.Id, user.Id).Exp;
+                int SpaceCount = Math.Max(GlobalExp, ServerExp).ToString().Length;
+                BoardGraphics.DrawString($"{lang["userpanel_exp_global"]}{GlobalExp.ToString().Space(SpaceCount, After: false)} ({lang["userpanel_exp_level"]}{ExpManager.Level(GlobalExp, GuildDatabase.INC_GUILD),3})\n" +
+                                         $"{lang["userpanel_exp_server"]}{ServerExp.ToString().Space(SpaceCount, After: false)} ({lang["userpanel_exp_level"]}" +
+                                         $"{ExpManager.Level(GlobalExp, (uint)GuildDatabase.GetOrFake(Context.Guild.Id).Increment),3})",
                     RankingFont, UsernameBrush, new PointF(SeparatorX + 35, SeparatorY + 240)); //Exp & level
-                BoardGraphics.DrawString($"{lang["userpanel_credits"]}{GlobalUserDatabase.GetOrFake(user.Id).Credit,7}¥",
-                    RankingFont, UsernameBrush, new PointF(SeparatorX + 650, SeparatorY + 240)); //Credits
-                                                                                                 //Draw voted
                 BoardGraphics.DrawString(lang["userpanel_voted", "VOTED", (DiscordBotlist.UserVoted(user.Id).Result ? "Yes" : "No")],
                     RankingFont, UsernameBrush, new PointF(SeparatorX + 35, SeparatorY + 340));
                 //Delete graphics

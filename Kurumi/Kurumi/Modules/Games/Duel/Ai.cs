@@ -1,4 +1,5 @@
-﻿using Kurumi.Modules.Games.Duel.Database;
+﻿using Kurumi.Services.Database.Databases;
+using Kurumi.Services.Database.Models;
 using Kurumi.Services.Random;
 using System;
 using System.Collections.Generic;
@@ -42,17 +43,17 @@ namespace Kurumi.Modules.Games.Duel
 
             Item[] AiSkills = new Item[]
             {
-                CharacterDatabase.GetItem(x => x.Id == AI.Equipment.X),
-                CharacterDatabase.GetItem(x => x.Id == AI.Equipment.A),
-                CharacterDatabase.GetItem(x => x.Id == AI.Equipment.Y),
+                CharacterDatabase.GetItem(x => x.Id == AI.X),
+                CharacterDatabase.GetItem(x => x.Id == AI.A),
+                CharacterDatabase.GetItem(x => x.Id == AI.Y),
                 null
             };
 
             Item[] PlayerSkills = new Item[]
             {
-                CharacterDatabase.GetItem(x => x.Id == Player.Equipment.X),
-                CharacterDatabase.GetItem(x => x.Id == Player.Equipment.A),
-                CharacterDatabase.GetItem(x => x.Id == Player.Equipment.Y),
+                CharacterDatabase.GetItem(x => x.Id == Player.X),
+                CharacterDatabase.GetItem(x => x.Id == Player.A),
+                CharacterDatabase.GetItem(x => x.Id == Player.Y),
                 null
             };
             

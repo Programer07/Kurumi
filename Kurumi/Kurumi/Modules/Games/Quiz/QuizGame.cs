@@ -125,7 +125,7 @@ namespace Kurumi.Modules.Games.Quiz
                     else
                     {
                         await Context.Channel.SendEmbedAsync(lang["quiz_won", "SCORE", Score, "HP", HP]);
-                        GlobalUserDatabase.GetOrCreate(player.Id).Credit += 50;
+                        UserDatabase.GetOrCreate(player.Id).Credit += 50;
                     }
 
                     await Utilities.Log(new LogMessage(LogSeverity.Info, "Quiz", "success"), Context);

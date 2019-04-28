@@ -113,7 +113,7 @@ namespace Kurumi.Modules.Music
                         break;
                 }
 
-                float Volume = (GuildConfigDatabase.GetOrFake(Context.Guild.Id).Volume) / 100F;
+                float Volume = (GuildDatabase.GetOrFake(Context.Guild.Id).Volume) / 100F;
 
                 //Check if the user is in a voice channel
                 if ((Context.User as IVoiceState).VoiceChannel == null)
@@ -318,7 +318,7 @@ namespace Kurumi.Modules.Music
                         return;
                     }
 
-                    float Volume = (GuildConfigDatabase.GetOrFake(Context.Guild.Id).Volume) / 100F;
+                    float Volume = (GuildDatabase.GetOrFake(Context.Guild.Id).Volume) / 100F;
                     RegisterMusicPlayer(Context.Guild.Id, new MusicPlayer(Context, (Context.User as IVoiceState).VoiceChannel, Volume, new ListenMoeSongInfo(Context.User)));
                 }
                 await Utilities.Log(new LogMessage(LogSeverity.Info, "ListenMoe", "success"), Context);
@@ -364,7 +364,7 @@ namespace Kurumi.Modules.Music
                 //Send volume
                 if (Vol == null)
                 {
-                    var g = GuildConfigDatabase.Get(Context.Guild.Id);
+                    var g = GuildDatabase.Get(Context.Guild.Id);
                     await Context.Channel.SendEmbedAsync(lang["music_volume_display", "VOLUME", g?.Volume ?? 100]);
                     return;
                 }
@@ -396,7 +396,7 @@ namespace Kurumi.Modules.Music
                 }
 
                 //Set volume in guild database
-                var guild = GuildConfigDatabase.GetOrCreate(Context.Guild.Id);
+                var guild = GuildDatabase.GetOrCreate(Context.Guild.Id);
                 guild.Volume = volume;
 
                 //Set player volume

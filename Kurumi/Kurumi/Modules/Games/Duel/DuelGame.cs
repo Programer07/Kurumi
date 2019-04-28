@@ -6,7 +6,8 @@ using Discord;
 using Discord.Commands;
 using Kurumi.Common;
 using Kurumi.Common.Extensions;
-using Kurumi.Modules.Games.Duel.Database;
+using Kurumi.Services.Database.Databases;
+using Kurumi.Services.Database.Models;
 using Kurumi.Services.Random;
 using Kurumi.StartUp;
 
@@ -54,7 +55,7 @@ namespace Kurumi.Modules.Games.Duel
                     {
                         Count++;
                         Item Selected;
-                        if (State.CurrentCharacter.Data.Ai)
+                        if (State.CurrentCharacter.Ai)
                         {
                             Selected = Ai.SelectSkill(State.CurrentPlayerStats,
                                                       State.OtherPlayerStats,
@@ -96,13 +97,13 @@ namespace Kurumi.Modules.Games.Duel
 
                         EmbedBuilder Embed = new EmbedBuilder()
                             .WithColor(Config.EmbedColor)
-                            .WithTitle(State.OtherCharacter.Data.Name)
+                            .WithTitle(State.OtherCharacter.Name)
                             .AddField(lang["character_hp"], $":heart: {State.OtherPlayerStats.Hp}/{State.OtherPlayerStats.FullHp}")
                             .AddField(lang["character_damage_last"], $"{(Result.Crit ? ":zap:" : ":dagger:")} {Result.Damage * Result.Combo}")
                             .AddField(lang["character_damage_blocked"],
                              $":shield: {(State.OtherPlayerStats.Resistance + Result.ResistanceBonus) * Result.Combo}\n‏‏‎ ");
                         if (Result.Healed != 0)
-                            Embed.AddField(State.CurrentCharacter.Data.Name, 
+                            Embed.AddField(State.CurrentCharacter.Name, 
                                             $"{lang["character_healed"]}\n:green_heart: {Result.Healed}\n{lang["character_new_hp"]}\n" +
                                             $":heart: {State.CurrentPlayerStats.Hp}/{State.CurrentPlayerStats.FullHp}");
                         await Context.Channel.SendEmbedAsync(Embed);
@@ -110,17 +111,17 @@ namespace Kurumi.Modules.Games.Duel
                         State.NextTurn();
                     }
 
-                    var Player1Damages = State.Player1Character.Equipment.DamageItems(State.Player1Stats.TotalData.Durability, State.Player2Stats.TotalData.Durability);
+                    var Player1Damages = State.Player1Character.DamageItems(State.Player1Stats.TotalData.Durability, State.Player2Stats.TotalData.Durability);
                     string Player1DamageString = null;
                     for (int i = 0; i < Player1Damages.Count; i++)
                         Player1DamageString += "\n" + Player1Damages[i].ToString(lang).Remove("**");
 
-                    var Player2Damages = State.Player2Character.Equipment.DamageItems(State.Player2Stats.TotalData.Durability, State.Player1Stats.TotalData.Durability);
+                    var Player2Damages = State.Player2Character.DamageItems(State.Player2Stats.TotalData.Durability, State.Player1Stats.TotalData.Durability);
                     string Player2DamageString = null;
                     for (int i = 0; i < Player2Damages.Count; i++)
                         Player2DamageString += "\n" + Player2Damages[i].ToString(lang).Remove("**");
 
-                    await Context.Channel.SendEmbedAsync($"\n**[{State.WinnerCharacter.Data.Name}]**\n" +
+                    await Context.Channel.SendEmbedAsync($"\n**[{State.WinnerCharacter.Name}]**\n" +
                                                          $"▸{lang["character_hp"]}: {State.WinnerStats.Hp}/{State.WinnerStats.FullHp}\n" +
                                                          $"▸{lang["character_total_damage"]}{State.WinnerStats.TotalData.DamageDealt}\n" +
                                                          $"▸{lang["character_total_blocked"]}{State.WinnerStats.TotalData.DamageBlocked}\n" +
@@ -129,14 +130,14 @@ namespace Kurumi.Modules.Games.Duel
                                                          $"{(Player1DamageString == null ? "" : $"▸{lang["character_damages"]}```{Player1DamageString}```\n")}" +
                                                          $"\n" +
                                                          $"\n" +
-                                                         $"**[{State.LoserCharacter.Data.Name}]**\n" +
+                                                         $"**[{State.LoserCharacter.Name}]**\n" +
                                                          $"▸{lang["character_hp"]}: {State.LoserStats.Hp}/{State.LoserStats.FullHp}\n" +
                                                          $"▸{lang["character_total_damage"]}{State.LoserStats.TotalData.DamageDealt}\n" +
                                                          $"▸{lang["character_total_blocked"]}{State.LoserStats.TotalData.DamageBlocked}\n" +
                                                          $"▸{lang["character_highest_combo"]}{State.LoserStats.TotalData.HighestCombo}\n" +
                                                          $"▸{lang["character_total_healed"]}{State.LoserStats.TotalData.HpHealed}\n" +
                                                          $"{(Player2DamageString == null ? "" : $"▸{lang["character_damages"]}```{Player2DamageString}```")}",
-                        Title: lang["character_end", "WINNER", State.WinnerCharacter.Data.Name, "LOSER", State.LoserCharacter.Data.Name]);
+                        Title: lang["character_end", "WINNER", State.WinnerCharacter.Name, "LOSER", State.LoserCharacter.Name]);
 
                     await Utilities.Log(new LogMessage(LogSeverity.Info, "Duel", "success"), Context);
                 }
@@ -150,9 +151,9 @@ namespace Kurumi.Modules.Games.Duel
 
         private async Task<Item> WaitForUserSelect(IUser player, IUser otherPlayer, Character character)
         {
-            Item X = CharacterDatabase.GetItem(x => x.Id == character.Equipment.X);
-            Item Y = CharacterDatabase.GetItem(x => x.Id == character.Equipment.Y);
-            Item A = CharacterDatabase.GetItem(x => x.Id == character.Equipment.A);
+            Item X = CharacterDatabase.GetItem(x => x.Id == character.X);
+            Item Y = CharacterDatabase.GetItem(x => x.Id == character.Y);
+            Item A = CharacterDatabase.GetItem(x => x.Id == character.A);
             EmbedBuilder embed = new EmbedBuilder()
                 .WithColor(Config.EmbedColor)
                 .WithTitle(lang["character_select", "PLAYER", player.Username])

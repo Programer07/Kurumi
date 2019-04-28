@@ -42,23 +42,16 @@ namespace Kurumi.Modules.Moderation
                     return;
                 }
 
-                var GuildWarnings = ModDatabase.GetOrCreate(Context.Guild.Id);
-                var UserWarning = GuildWarnings.FirstOrDefault(x => x.UserId == TargetUser.Id);
-                if(UserWarning == null)
-                {
-                    var w = new Services.Database.Models.UserWarning() { Count = 0, UserId = TargetUser.Id };
-                    UserWarning = w;
-                    GuildWarnings.Add(w);
-                }
-                UserWarning.Count++;
-                if(UserWarning.Count == GuildConfigDatabase.GetOrCreate(Context.Guild.Id).MaxWarnings)
+                var User = GuildDatabase.GetOrCreate(Context.Guild.Id, TargetUser.Id);
+                User.Warnings++;
+                if(User.Warnings == GuildDatabase.GetOrCreate(Context.Guild.Id).MaxWarnings)
                 {
                     await Context.Channel.SendEmbedAsync(lang["automod_too_many_warnings", "TARGET", TargetUser.Username]);
-                    GuildWarnings.Remove(UserWarning);
+                    User.Warnings = 0;
                     await Execute(Context, TargetUser);
                 }
                 else
-                    await Context.Channel.SendEmbedAsync(lang["automod_newwarning", "TARGET", TargetUser.Username, "COUNT", UserWarning.Count, "MAX", GuildConfigDatabase.Get(Context.Guild.Id).MaxWarnings]);
+                    await Context.Channel.SendEmbedAsync(lang["automod_newwarning", "TARGET", TargetUser.Username, "COUNT", User.Warnings, "MAX", GuildDatabase.Get(Context.Guild.Id).MaxWarnings]);
                 await Utilities.Log(new LogMessage(LogSeverity.Info, "Warn", "success"), Context);
             }
             catch (Exception ex)
@@ -81,17 +74,14 @@ namespace Kurumi.Modules.Moderation
                     await Context.Channel.SendEmbedAsync(lang["automod_not_found"]);
                     return;
                 }
-                var GuildWarnings = ModDatabase.GetOrCreate(Context.Guild.Id);
-                var UserWarning = GuildWarnings.FirstOrDefault(x => x.UserId == TargetUser.Id);
-                if(UserWarning == null)
+                var User = GuildDatabase.GetOrCreate(Context.Guild.Id, TargetUser.Id);
+                if (User.Warnings == 0)
                 {
                     await Context.Channel.SendEmbedAsync(lang["automod_no_warnings", "TARGET", TargetUser.Username]);
                     return;
                 }
-                UserWarning.Count--;
-                if (UserWarning.Count == 0)
-                    GuildWarnings.Remove(UserWarning);
-                await Context.Channel.SendEmbedAsync(lang["automod_removed_warning", "TARGET", TargetUser.Username, "COUNT", UserWarning.Count]);
+                User.Warnings--;
+                await Context.Channel.SendEmbedAsync(lang["automod_removed_warning", "TARGET", TargetUser.Username, "COUNT", User.Warnings]);
                 await Utilities.Log(new LogMessage(LogSeverity.Info, "RemoveWarning", "success"), Context);
             }
             catch (Exception ex)
@@ -113,17 +103,13 @@ namespace Kurumi.Modules.Moderation
                     await Context.Channel.SendEmbedAsync(lang["automod_not_found"]);
                     return;
                 }
-                var GuildWarnings = ModDatabase.GetOrCreate(Context.Guild.Id);
-                var UserWarning = GuildWarnings.FirstOrDefault(x => x.UserId == TargetUser.Id);
-                if (UserWarning == null)
+                var User = GuildDatabase.GetOrCreate(Context.Guild.Id, TargetUser.Id);
+                if (User.Warnings == 0)
                 {
                     await Context.Channel.SendEmbedAsync(lang["automod_no_warnings", "TARGET", TargetUser.Username]);
                     return;
                 }
-                if (UserWarning == null)
-                    await Context.Channel.SendEmbedAsync(lang["automod_no_warnings", "TARGET", TargetUser.Username]);
-                else
-                    await Context.Channel.SendEmbedAsync(lang["automod_warnings", "TARGET", TargetUser.Username, "COUNT", UserWarning.Count]);
+                await Context.Channel.SendEmbedAsync(lang["automod_warnings", "TARGET", TargetUser.Username, "COUNT", User.Warnings]);
                 await Utilities.Log(new LogMessage(LogSeverity.Info, "ListWarning", "success"), Context);
             }
             catch (Exception ex)
@@ -139,12 +125,12 @@ namespace Kurumi.Modules.Moderation
             try
             {
                 var lang = Language.GetLanguage(Context.Guild);
-                var GuildConfig = GuildConfigDatabase.GetOrCreate(Context.Guild.Id);
+                var GuildConfig = GuildDatabase.GetOrCreate(Context.Guild.Id);
                 if (Arg1 == null) //modsettings
                 {
                     string Words = "\n•" + lang["modsettings_no_words"];
-                    if (GuildConfig.BlakclistedWords.Count > 0)
-                        Words = "\n•" + string.Join("\n•", GuildConfig.BlakclistedWords);
+                    if (GuildConfig.BlacklistedWords.Count > 0)
+                        Words = "\n•" + string.Join("\n•", GuildConfig.BlacklistedWords);
 
                     await Context.Channel.SendEmbedAsync(lang["modsettings_settings", "MAXWAR", GuildConfig.MaxWarnings, "WORDPUNISHMENT", GuildConfig.PunishmentForWord, "WARNINGPUNISHMENT", GuildConfig.PunishmentForWarning,
                                                                               "BLACKLISTEDWORDS", Words]);
@@ -157,7 +143,7 @@ namespace Kurumi.Modules.Moderation
                     }
                     else //modsettings maxwarnings <number>
                     {
-                        if (!int.TryParse(Arg2, out int NewMaxWarning) || NewMaxWarning > 10 || NewMaxWarning < 2)
+                        if (!uint.TryParse(Arg2, out uint NewMaxWarning) || NewMaxWarning > 10 || NewMaxWarning < 2)
                         {
                             await Context.Channel.SendEmbedAsync(lang["modsettings_maxwarning_invalid_number"]);
                         }
@@ -211,32 +197,32 @@ namespace Kurumi.Modules.Moderation
                     if (Arg2 == null)
                     {
                         string Words = "\n•" + lang["modsettings_no_words"];
-                        if (GuildConfig.BlakclistedWords.Count > 0)
-                            Words = "\n•" + string.Join("\n•", GuildConfig.BlakclistedWords);
+                        if (GuildConfig.BlacklistedWords.Count > 0)
+                            Words = "\n•" + string.Join("\n•", GuildConfig.BlacklistedWords);
 
                         await Context.Channel.SendEmbedAsync(lang["modsettings_blacklisted", "WORDS", Words]);
                     }
                     else if (Arg2.ToLower() == "add" && Arg3 != null)
                     {
-                        if (GuildConfig.BlakclistedWords.Any(x => x.Equals(Arg3, StringComparison.CurrentCultureIgnoreCase)))
+                        if (GuildConfig.BlacklistedWords.Any(x => x.Equals(Arg3, StringComparison.CurrentCultureIgnoreCase)))
                         {
                             await Context.Channel.SendEmbedAsync(lang["modsettings_blacklisted_contains"]);
                         }
                         else
                         {
-                            GuildConfig.BlakclistedWords.Add(Arg3);
+                            GuildConfig.BlacklistedWords.Add(Arg3);
                             await Context.Channel.SendEmbedAsync(lang["modsettings_blacklisted_added"]);
                         }
                     }
                     else if (Arg2.ToLower() == "remove" && Arg3 != null)
                     {
-                        if (!GuildConfig.BlakclistedWords.Any(x => x.Equals(Arg3, StringComparison.CurrentCultureIgnoreCase)))
+                        if (!GuildConfig.BlacklistedWords.Any(x => x.Equals(Arg3, StringComparison.CurrentCultureIgnoreCase)))
                         {
                             await Context.Channel.SendEmbedAsync(lang["modsettings_blacklisted_doesnt_contains"]);
                         }
                         else
                         {
-                            GuildConfig.BlakclistedWords.RemoveAll(x => x.Equals(Arg3, StringComparison.CurrentCultureIgnoreCase));
+                            GuildConfig.BlacklistedWords.RemoveAll(x => x.Equals(Arg3, StringComparison.CurrentCultureIgnoreCase));
                             await Context.Channel.SendEmbedAsync(lang["modsettings_blacklisted_removed", "WORD", Arg3]);
                         }
                     }
@@ -265,11 +251,11 @@ namespace Kurumi.Modules.Moderation
                 //if (Context.Guild.OwnerId == Context.Message.Author.Id)
                     //return;
 
-                var GuildConfig = GuildConfigDatabase.Get(Context.Guild.Id);
+                var GuildConfig = GuildDatabase.Get(Context.Guild.Id);
                 if (GuildConfig == null)
                     return;
 
-                List<string> BlackListedWords = GuildConfig.BlakclistedWords;
+                List<string> BlackListedWords = GuildConfig.BlacklistedWords;
                 if (BlackListedWords.Count == 0)
                     return;
                 foreach (string word in BlackListedWords)
@@ -287,25 +273,17 @@ namespace Kurumi.Modules.Moderation
                         }
                         else
                         {
-                            var GuildWarnings = ModDatabase.GetOrCreate(Context.Guild.Id);
-                            var UserWarning = GuildWarnings.FirstOrDefault(x => x.UserId == Context.User.Id);
-                            if (UserWarning == null)
-                            {
-                                var w = new Services.Database.Models.UserWarning() { Count = 0, UserId = Context.User.Id };
-                                UserWarning = w;
-                                GuildWarnings.Add(w);
-                            }
-                            UserWarning.Count++;
-                            if (UserWarning.Count == GuildConfig.MaxWarnings)
+                            var User = GuildDatabase.GetOrCreate(Context.Guild.Id, Context.User.Id);
+                            User.Warnings++;
+                            if (User.Warnings == GuildConfig.MaxWarnings)
                             {
                                 await Context.Channel.SendEmbedAsync(lang["automod_too_many_warnings", "TARGET", Context.User.Username]);
-                                GuildWarnings.Remove(UserWarning);
                                 await Execute(Context, Context.User);
                             }
                             else
                             {
                                 await Context.Channel.SendEmbedAsync(lang["automod_blacklisted_word_warning", "USER", Context.Message.Author.Username, 
-                                                                    "COUNT", UserWarning.Count, "MAX", GuildConfigDatabase.Get(Context.Guild.Id).MaxWarnings]);
+                                                                    "COUNT", User.Warnings, "MAX", GuildDatabase.Get(Context.Guild.Id).MaxWarnings]);
                             }
                         }
                         break;
@@ -322,7 +300,7 @@ namespace Kurumi.Modules.Moderation
             try
             {
                 var lang = Language.GetLanguage(Context.Guild);
-                string Punishment = GuildConfigDatabase.Get(Context.Guild.Id).PunishmentForWarning.ToLower();
+                string Punishment = GuildDatabase.Get(Context.Guild.Id).PunishmentForWarning.ToLower();
                 if (Punishment == "kick")
                 {
                     await TargetUser.TrySendEmbedAsync(lang["automod_kick_dm", "GUILD", Context.Guild.Name]);

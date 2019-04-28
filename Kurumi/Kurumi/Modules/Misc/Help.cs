@@ -53,7 +53,7 @@ namespace Kurumi.Modules.Misc
                 else if (PermissionManager.NameOfCommand(command)) //Print command info
                 {
                     var cmd = CommandData.GetCommand(command);
-                    string prefix = GuildConfigDatabase.GetOrFake(Context.Guild.Id).Prefix;
+                    string prefix = GuildDatabase.GetOrFake(Context.Guild.Id).Prefix;
                     await Context.Channel.SendEmbedAsync(new EmbedBuilder()
                         .WithColor(Config.EmbedColor)
                         .WithDescription($"**[**``{cmd.CommandName}``**]**{Environment.NewLine}" +

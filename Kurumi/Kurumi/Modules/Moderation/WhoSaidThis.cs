@@ -3,14 +3,16 @@ using Discord.Commands;
 using Kurumi.Common;
 using Kurumi.Common.Extensions;
 using Kurumi.Services.Database;
+using Kurumi.Services.Database.Databases;
+using Kurumi.Services.Database.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using static Kurumi.Modules.Misc.Say;
 
 namespace Kurumi.Modules.Moderation
 {
@@ -25,20 +27,14 @@ namespace Kurumi.Modules.Moderation
             try
             {
                 var lang = Language.GetLanguage(Context.Guild);
-                string FilePath = $"{KurumiPathConfig.GuildDatabase}{Context.Guild.Id}{KurumiPathConfig.Separator}Messages{KurumiPathConfig.Separator}{Input}.json";
-                if (string.IsNullOrWhiteSpace(Input) || !File.Exists(FilePath))
+                var guild = GuildDatabase.GetOrFake(Context.Guild.Id);
+                DeletedMessage msg;
+                if (string.IsNullOrWhiteSpace(Input) || (msg = guild.Messages.FirstOrDefault(x => x.MessageId.ToString() == Input)) == null)
                 {
                     await Context.Channel.SendEmbedAsync(lang["whosaidthis_message_404"]);
                     return;
                 }
-                string EmbedDesc = lang["whosaidthis_unsupported"];
-                try
-                {
-                    Message msg = JsonConvert.DeserializeObject<Message>(File.ReadAllText(FilePath));
-                    EmbedDesc = $"{lang["whosaidthis_text"]}{msg.Text.Unmention()}\n{lang["whosaidthis_user"]}{msg.SentBy.Unmention()}\n{lang["whosaidthis_time"]}{msg.SentAt.ToLongDateString()}";
-                }
-                catch (Exception) { } //Old style
-                await Context.Channel.SendEmbedAsync(EmbedDesc);
+                await Context.Channel.SendEmbedAsync($"{lang["whosaidthis_text"]}{msg.Text.Unmention()}\n{lang["whosaidthis_user"]}{msg.SentBy.Unmention()}\n{lang["whosaidthis_time"]}{msg.SentAt.ToLongDateString()}");
                 await Utilities.Log(new LogMessage(LogSeverity.Info, "WhoSaidThis", "success"));
             }
             catch (Exception ex)

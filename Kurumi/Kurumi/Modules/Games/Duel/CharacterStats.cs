@@ -1,4 +1,4 @@
-﻿using Kurumi.Modules.Games.Duel.Database;
+﻿using Kurumi.Services.Database.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,13 +21,13 @@ namespace Kurumi.Modules.Games.Duel
         {
             TotalData = new DataCollector();
             this.Character = Character;
-            FullHp = Character.Equipment.TotalHP(Enemy);
+            FullHp = Character.TotalHP(Enemy);
             Hp = FullHp;
-            Damage = Character.Equipment.TotalDamage(Enemy);
-            Resistance = Character.Equipment.TotalResistance(Enemy);
-            ResPenetration = Character.Equipment.TotalResPenetration();
-            Critical = Character.Equipment.TotalCritChance(Enemy);
-            CritMultiplier = Character.Equipment.TotalCritMultiplier();
+            Damage = Character.TotalDamage(Enemy);
+            Resistance = Character.TotalResistance(Enemy);
+            ResPenetration = Character.TotalResPenetration();
+            Critical = Character.TotalCritChance(Enemy);
+            CritMultiplier = Character.TotalCritMultiplier();
         }
 
         public CharacterStats(CharacterStats o)
