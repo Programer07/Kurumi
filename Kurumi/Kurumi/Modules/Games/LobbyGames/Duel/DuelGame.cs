@@ -6,12 +6,13 @@ using Discord;
 using Discord.Commands;
 using Kurumi.Common;
 using Kurumi.Common.Extensions;
+using Kurumi.Modules.LobbyGames.Games;
 using Kurumi.Services.Database.Databases;
 using Kurumi.Services.Database.Models;
 using Kurumi.Services.Random;
 using Kurumi.StartUp;
 
-namespace Kurumi.Modules.Games.Duel
+namespace Kurumi.Modules.Games.LobbyGames.Duel
 {
     public class DuelGame : IGame
     {

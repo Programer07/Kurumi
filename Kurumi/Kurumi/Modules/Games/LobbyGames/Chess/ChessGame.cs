@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Kurumi.Common;
 using Kurumi.Common.Extensions;
+using Kurumi.Modules.LobbyGames.Games;
 using Kurumi.Services.Random;
 using Kurumi.StartUp;
 using System;
@@ -9,7 +10,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kurumi.Modules.Games.Chess
+namespace Kurumi.Modules.Games.LobbyGames.Chess
 {
     public class ChessGame : IGame
     {
@@ -31,7 +32,7 @@ namespace Kurumi.Modules.Games.Chess
             AI = true;
         }
         public bool ValidPlayer(IUser user) => true;
-
+        public override string ToString() => "lobby_chess";
 
         #region Game
         private ICommandContext Context;
@@ -234,7 +235,5 @@ namespace Kurumi.Modules.Games.Chess
             Queen
         }
         #endregion Game
-
-        public override string ToString() => "lobby_chess";
     }
 }

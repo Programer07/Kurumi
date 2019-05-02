@@ -1,14 +1,16 @@
 ﻿using Discord;
 using Discord.Commands;
-using Kurumi.Modules.Games.Chess;
-using Kurumi.Modules.Games.Duel;
-using Kurumi.Modules.Games.Quiz;
+using Kurumi.Common;
+using Kurumi.Modules.Games.LobbyGames.Chess;
+using Kurumi.Modules.Games.LobbyGames.Duel;
+using Kurumi.Modules.Games.LobbyGames.Quiz;
+using Kurumi.Modules.LobbyGames.Games;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kurumi.Modules.Games
+namespace Kurumi.Modules.Games.LobbyGames
 {
     public class Lobby
     {
@@ -134,6 +136,33 @@ namespace Kurumi.Modules.Games
                     break;
             }
             return pList;
+        }
+        public EmbedBuilder ToEmbed()
+        {
+            var lang = Language.GetLanguage(Context.Guild);
+
+            string settings = string.Empty;
+            if (Game.Settings.Count == 0)
+                settings = lang["lobby_no_settings"];
+            else
+            {
+                foreach (var Setting in Game.Settings)
+                {
+                    settings += $"{Setting.Key}: **{Setting.Value}**";
+                }
+            }
+
+            return new EmbedBuilder()
+                       .WithColor(Config.EmbedColor)
+                       .WithTitle(lang["lobby_name", "USER", Context.User.Username])
+                       .AddField(lang["lobby_top", "CURRENT", Players.Count, "MAX", Game.MaxPlayers], ToPlayerString(), true)
+
+                       .AddField(lang["lobby_game"], $"{lang[Game.ToString()]}\n\n" +
+                                                     $"{lang["lobby_max_players", "MAX", Game.MaxPlayers]}\n" +
+                                                     $"{lang["lobby_min_players", "MIN", Game.MinPlayers]}\n\n" +
+                                                     $"{lang["lobby_game_settings"]}\n" +
+                                                     $"{settings}", true)
+                       .WithFooter(lang["lobby_footer"]);
         }
     }
 

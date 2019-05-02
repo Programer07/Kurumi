@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Discord;
+using Kurumi.Modules.Music.Services;
 
 namespace Kurumi.Modules.Music
 {

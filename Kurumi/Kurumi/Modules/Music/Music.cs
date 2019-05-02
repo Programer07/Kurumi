@@ -3,6 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Kurumi.Common;
 using Kurumi.Common.Extensions;
+using Kurumi.Modules.Music.Services;
 using Kurumi.Services.Database.Databases;
 using Kurumi.Services.Database.Models;
 using System;

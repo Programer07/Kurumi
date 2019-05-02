@@ -19,7 +19,7 @@ namespace Kurumi.Services
             { EventType.StatusUpdate, (e) => Program.Bot.NextPlayingStatus() },
             { EventType.ESSave, Current.Save },
             { EventType.DBSave, (e) => DatabaseManager.SaveDatabases(false) },
-            { EventType.Reminder, Remindme.Send },
+            { EventType.Reminder, UserCommands.SendReminder },
         };
 
         private static EventScheduler _Current;

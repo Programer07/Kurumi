@@ -1,11 +1,12 @@
 ﻿using Discord;
 using Discord.Commands;
+using Kurumi.Modules.Games.LobbyGames;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kurumi.Modules.Games
+namespace Kurumi.Modules.LobbyGames.Games
 {
     public interface IGame
     {

@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Kurumi.Common;
 using Kurumi.Common.Extensions;
+using Kurumi.Modules.LobbyGames.Games;
 using Kurumi.StartUp;
 using System;
 using System.Collections.Concurrent;
@@ -10,7 +11,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kurumi.Modules.Games
+namespace Kurumi.Modules.Games.LobbyGames
 {
     public class LobbyManager : ModuleBase
     {
@@ -63,7 +64,7 @@ namespace Kurumi.Modules.Games
                     var lobby = GetLobby();
                     if (lobby != null)
                     {
-                        await Context.Channel.SendEmbedAsync(ToEmbedBuilder(lobby));
+                        await Context.Channel.SendEmbedAsync(lobby.ToEmbed());
                     }
                     else
                     {
@@ -95,7 +96,7 @@ namespace Kurumi.Modules.Games
                 Lobbies.Add(lobby);
 
                 //Send message
-                await Context.Channel.SendEmbedAsync(ToEmbedBuilder(lobby));
+                await Context.Channel.SendEmbedAsync(lobby.ToEmbed());
 
                 await Utilities.Log(new LogMessage(LogSeverity.Info, "Lobby Create", "success"), Context);
             }
@@ -355,7 +356,7 @@ namespace Kurumi.Modules.Games
                 }
 
                 lobby.SetGame(gameType);
-                await Context.Channel.SendEmbedAsync(ToEmbedBuilder(lobby));
+                await Context.Channel.SendEmbedAsync(lobby.ToEmbed());
                 await Utilities.Log(new LogMessage(LogSeverity.Info, "Lobby Set Game", "success"), Context);
             }
             catch (Exception ex)
@@ -423,7 +424,7 @@ namespace Kurumi.Modules.Games
                     return;
                 }
 
-                if (!arg1.Contains("="))
+                if (arg1 == null || !arg1.Contains("="))
                 {
                     await Context.Channel.SendEmbedAsync(lang["lobby_bad_setting"]);
                     return;
@@ -520,33 +521,6 @@ namespace Kurumi.Modules.Games
                     Invites.Remove(Invite);
                 return Task.CompletedTask;
             });
-        }
-        private EmbedBuilder ToEmbedBuilder(Lobby lobby)
-        {
-            return new EmbedBuilder()
-                        .WithColor(Config.EmbedColor)
-                        .WithTitle(lang["lobby_name", "USER", Context.User.Username])
-                        .AddField(lang["lobby_top", "CURRENT", lobby.Players.Count, "MAX", lobby.Game.MaxPlayers], lobby.ToPlayerString(), true)
-
-                        .AddField(lang["lobby_game"], $"{lang[lobby.Game.ToString()]}\n\n" +
-                                                      $"{lang["lobby_max_players", "MAX", lobby.Game.MaxPlayers]}\n" +
-                                                      $"{lang["lobby_min_players", "MIN", lobby.Game.MinPlayers]}\n\n" +
-                                                      $"{lang["lobby_game_settings"]}\n" +
-                                                      $"{ToSettingsString(lobby.Game)}", true)
-                        .WithFooter(lang["lobby_footer"]);
-        }
-        private string ToSettingsString(IGame game)
-        {
-            if (game.Settings.Count == 0)
-                return lang["lobby_no_settings"];
-
-            string settingsString = string.Empty;
-            foreach (var Setting in game.Settings)
-            {
-                settingsString += $"{Setting.Key}: **{Setting.Value.ToString()}**";
-            }
-
-            return settingsString;
         }
         public LobbyInvite GetInvite(ulong User, ulong Guild)
         {

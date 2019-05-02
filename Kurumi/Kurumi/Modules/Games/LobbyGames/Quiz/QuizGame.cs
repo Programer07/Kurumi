@@ -7,12 +7,13 @@ using Discord;
 using Discord.Commands;
 using Kurumi.Common;
 using Kurumi.Common.Extensions;
+using Kurumi.Modules.LobbyGames.Games;
 using Kurumi.Services.Database;
 using Kurumi.Services.Database.Databases;
 using Kurumi.Services.Random;
 using Newtonsoft.Json;
 
-namespace Kurumi.Modules.Games.Quiz
+namespace Kurumi.Modules.Games.LobbyGames.Quiz
 {
     public class QuizGame : IGame
     {

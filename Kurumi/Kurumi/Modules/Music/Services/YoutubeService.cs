@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 
-namespace Kurumi.Modules.Music
+namespace Kurumi.Modules.Music.Services
 {
     public class YoutubeService : IMusicProviderService
     {

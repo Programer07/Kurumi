@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Kurumi.Modules.Games.Duel
+namespace Kurumi.Modules.Games.LobbyGames.Duel
 {
     public class CharacterStats
     {

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Kurumi.Modules.Games.Quiz
+namespace Kurumi.Modules.Games.LobbyGames.Quiz
 {
     public class Question
     {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace Kurumi.Modules.Games.Chess
+namespace Kurumi.Modules.Games.LobbyGames.Chess
 {
     public class ChessBoard
     {

@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kurumi.Modules.Music
+namespace Kurumi.Modules.Music.Services
 {
     public class SoundCloudService : IMusicProviderService
     {

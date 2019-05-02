@@ -5,10 +5,11 @@ using Kurumi.Common;
 using Kurumi.Common.Attributes;
 using Kurumi.Common.Extensions;
 using Kurumi.Modules.Admin;
-using Kurumi.Modules.Games;
-using Kurumi.Modules.Games.Chess;
-using Kurumi.Modules.Games.Duel;
-using Kurumi.Modules.Games.Quiz;
+using Kurumi.Modules.Games.LobbyGames;
+using Kurumi.Modules.Games.LobbyGames.Chess;
+using Kurumi.Modules.Games.LobbyGames.Duel;
+using Kurumi.Modules.Games.LobbyGames.Quiz;
+using Kurumi.Modules.LobbyGames.Games;
 using Kurumi.Modules.Moderation;
 using Kurumi.Modules.Music;
 using Kurumi.Modules.Utility;
@@ -234,7 +235,7 @@ namespace Kurumi.Services
             }
             #endregion Games
 
-            await AfkMessage.SendMessage(context);
+            await UserCommands.SendAfkMessage(context);
         }
         private bool HasCustomAttribute(Type attribute, string command)
         {

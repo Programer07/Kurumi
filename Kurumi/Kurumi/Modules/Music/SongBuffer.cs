@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Kurumi.Common;
+using Kurumi.Modules.Music.Services;
 using Kurumi.Services.Database;
 using System;
 using System.Collections.Generic;

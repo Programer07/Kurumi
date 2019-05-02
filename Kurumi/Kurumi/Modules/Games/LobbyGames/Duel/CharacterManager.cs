@@ -18,7 +18,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace Kurumi.Modules.Games.Duel
+namespace Kurumi.Modules.Games.LobbyGames.Duel
 {
     public class CharacterManager : ModuleBase
     {
